@@ -1,0 +1,142 @@
+<?php
+/**
+ * Created by PhpStorm.
+ * User: jpb
+ * Date: 05/02/19
+ * Time: 08:55
+ */
+
+//var_dump($argv);
+
+include 'functions/useful.php';
+
+if (!isset($argv[1])){
+    echo setColor("green") ;
+    echo "-------------------------------------------------" . "\n";
+    echo "Que voulez vous dire ? " . "\n";
+    echo setColor("yellow") ;
+    echo "utilisez --help pour plus d'informations sur l'utilisation des commandes ngshop." . "\n";
+    echo setColor("green") ;
+    echo "-------------------------------------------------" . "\n";
+
+}else{
+    switch ($argv[1] ) {
+        case "--help":
+            //echo chr(27).chr(91).'H'.chr(27).chr(91).'J';
+            echo setColor("green") ;
+            echo "-------------------------------------------------" . "\n";
+            echo "NgShop command line helper" . "\n";
+            echo "              " . "\n";
+            echo "              " . "\n";
+            echo setColor("yellow") ;
+            echo "Usage :" . "\n";
+            echo setColor("white") ;
+            echo "      command [options] [arguments]" . "\n";
+            echo "              " . "\n";
+            echo setColor("yellow") ;
+            echo "option : " . "\n";
+            echo setColor("green") ;
+            echo "      -h, --help ";
+            echo setColor("white") ;
+            echo "          affiche ce messsage d'aide.". "\n";
+            echo setColor("green") ;
+            echo "      -v, --version ";
+            echo setColor("white") ;
+            echo "       affiche la version.". "\n";
+            echo setColor("green") ;
+            echo "      -cat       ";
+            echo setColor("white") ;
+            echo "          affiche le catalogue des articles.". "\n";
+            echo setColor("green") ;
+            echo "      -art  [1...id]";
+            echo setColor("white") ;
+            echo "       affiche 1 article pas son id.". "\n";
+            echo setColor("green") ;
+            echo "      -coms  ";
+            echo setColor("white") ;
+            echo "              affiche les commentaires exitants.". "\n";
+            echo setColor("green") ;
+            echo "      -com  [1...id]";
+            echo setColor("white") ;
+            echo "       affiche les commentaires pour un article  id.". "\n";
+            echo "              " . "\n";
+            echo "              " . "\n";
+            echo "              " . "\n";
+            echo "              " . "\n";
+            break;
+        case "-cat":
+            $articles = generateCatalogue();
+
+            foreach ($articles as $value){
+
+                echo $value['id'] . " --  ";
+                echo $value['nom'] . "\n";
+
+            }
+            echo "selectionnez un article   alpha art"  .  "\n";
+            break;
+        case "-art":
+
+            $arr  = getArticleInfo($argv[2]);
+            foreach ($arr as $value){
+                echo $value . "\n";
+            }
+            break;
+
+        case "-com":
+                    if (isset($argv[2])){
+                        $coms  = getcommentairesByArt($argv[2]);
+                        foreach ($coms as $value){
+                            echo  $value . "\n";
+                        }
+                    }else{
+                        echo setColor("blue") ;
+                        echo"------------------------------------------------". "\n";
+                        echo "Commentaires"  . "\n";
+                        echo"------------------------------------------------". "\n";
+                        echo setColor("yellow") ;
+                        echo " [ Usage ]  " . "\n";
+                        echo setColor("green") ;
+                        echo "php NgShop coms 1...n : Affiche les commentaires pour un article n " . "\n";
+                    }
+                    break;
+        case "-coms":
+
+                $coms  = getCommentaires();
+                foreach ($coms as $value){
+                    echo  $value['name'] . "   ";
+                    echo  $value['commentaire'] . "\n";
+                }
+
+            break;
+        case "--version" :
+            echo setColor("red") ;
+            echo "ngShop";
+            echo setColor("white") ;
+            echo " version";
+            echo setColor("green") ;
+            echo  " 1.0.0 " ;
+            echo setColor("magenta") ;
+            echo "(2019) LTS". "\n";
+            break;
+        default :
+            echo setColor("green") ;
+            echo "-------------------------------------------------" . "\n";
+            echo "Que voulez vous dire ? " . "\n";
+            echo setColor("yellow") ;
+            echo "utilisez --help pour plus d'informations sur l'utilisation des commandes ngshop." . "\n";
+            echo setColor("green") ;
+            break;
+
+    }
+
+
+}
+
+
+
+
+
+
+
+

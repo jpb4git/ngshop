@@ -1,0 +1,132 @@
+body{
+
+    background-color: rgb(233, 233, 233);
+}
+.row{
+    background-color: rgb(246, 246, 246);
+}
+.bandeau{
+    background-image: url("../assets/green-bg.jpg");
+    min-height:39em;
+    background-size: cover;
+}
+
+.ul-features{
+    list-style-type: none!important;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    //background-color: #333333;
+}
+li{
+    float: left;
+}
+
+
+.art-img{
+width : 40%;
+height : 25%;
+
+}
+
+img .art-img-px{
+    border : 1px solid red;
+    width : 45px!important;
+    height : 45px!important;
+
+}
+.card{
+
+    min-height : 22em; 
+}
+
+.card-header{
+min-height: 17em;
+
+}
+
+.svg-icon{
+    width: 150px;
+    height : 150px;
+}
+.green-bottom-line{
+
+    border-bottom-style: solid;
+    border-bottom-width: thin;
+    border-bottom-color: darkgreen;
+}
+.img-head{
+    width: 10em;
+    height: 8em;
+}
+.infoBtn{
+    width: 300px;
+}
+.row-footer{
+    background: none !important;
+}
+.wcolMax{
+    width : 100%!important;
+}
+footer{
+    background-image: url("../assets/black-bg.png");
+    background-color: #222120;
+    z-index: 90;
+    min-height: 293px;
+    position: relative;
+}
+.panier-row{
+    display:block!important;
+}
+.btn-secondary {
+    background-color: beige!important;
+    color : black!important;
+    border :1px solid beige!important;
+}
+.btn-secondary:hover {
+    background-color: black!important;
+    color : white!important;
+    border :1px solid beige!important;
+}
+.btn-warning {
+    background-color: beige!important;
+    color : black!important;
+    border :1px solid beige!important;
+}
+.btn-warning:hover {
+    background-color: black!important;
+    color : white!important;
+    border :1px solid black!important;
+}
+.bg-primary {
+    background-color: beige!important;
+    color : black!important;
+    border :1px solid beige!important;
+}
+
+ div .error{
+
+    background-color: brown;
+    color :white ;
+}
+
+ div .width-qts{
+
+ }
+
+ div .largeTxt{
+     font-size: 110px;
+ }
+ .green-container{
+     background-color: rgb(34, 94, 6);
+     min-height : 330px;
+ }
+
+ div .trans{
+
+    background-color: transparent;
+ }
+ div .custom{
+     width:250px;
+     height :auto;
+ }
