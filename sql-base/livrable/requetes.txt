@@ -1,38 +1,54 @@
 Sélection sur une table 
 
-    • Liste des produits
+   1 • Liste des produits
 
 	    SELECT * FROM Article 		
 
-    • Liste des produits en rupture de stock (dont la quantité est “0”)
+   2 • Liste des produits en rupture de stock (dont la quantité est “0”)
      
 	    SELECT Article.Nom, Article.Prix FROM Article WHERE `Stock` = 0 ;
 
-    • Liste des commandes d’aujourd’hui classées par n° décroissant
+   3 • Liste des commandes d’aujourd’hui classées par n°(varchar(10)) décroissant
 	
         SELECT * FROM Commande where DATE(`Date_de_Commande`)=CURDATE()
-        ORDER BY Commande.Date_de_Commande DESC ;
-      
-    • Liste des commandes créées depuis les 10 derniers jours
+        ORDER BY Commande.commande_num DESC ;
+
+    3.1  liste des article pour une catégorie
+
+        SELECT Article.Nom, Categorie.Nom,Article.Stock 
+        FROM Article,Categorie 
+        WHERE Article.Categorie_id = Categorie.idCategorie 
+        AND Categorie.nom = "SECU"  
+
+        // AVEC INNER join 
+
+        SELECT Article.Nom, Categorie.Nom,Article.Stock 
+        FROM Article INNER JOIN categorie ON Article.Categorie_id = Categorie.idCategorie 
+        WHERE  Categorie.nom = "SECU"  
+
+
+   4 • Liste des commandes créées depuis les 10 derniers jours
       
         SELECT * FROM Commande  WHERE `Date_de_Commande` >= NOW() - INTERVAL 10 DAY;
 
 Sélection sur plusieurs tables
 
-    • Liste des produits (nom, quantité et prix unitaire nécessaire) d’une commande donnée
-
+   5 • Liste des produits (nom, quantité et prix unitaire nécessaire) d’une commande donnée
+        /* VERSION SANS INNER JOIN  */  
         SELECT Article.Nom,ligne_cmd.ligne_cmd_Qts,Article.Prix FROM Article, 	Commande ,ligne_cmd 
         WHERE ligne_cmd.Commande_id = Commande.idCommande 
         AND   ligne_cmd.Article_id = Article.idArticle
         AND   Commande.idCommande = 1;	
 
-    • Liste des utilisateurs habitant à Grenoble
+   6 • Liste des utilisateurs habitant à Grenoble
 	
-        SELECT  * FROM  User,Adress 
-        WHERE User.idUser = Adress.User_id 
-        AND Adress.Ville = "GRENOBLE"
+    
+        SELECT  User.nom FROM  User INNER JOIN Adress ON  User.idUser = Adress.User_id 
+        WHERE  Adress.Ville = "GRENOBLE"
 
-    • Prix total de la dernière commande passée
+
+
+   7 • Prix total de la dernière commande passée
       	
         SELECT ( SUM(ligne_table.ligne_cmd_Qts * ligne_table.ligne_cmd_prix) )AS tot
         FROM  ligne_cmd ligne_table, 
@@ -41,8 +57,9 @@ Sélection sur plusieurs tables
 	
 	
 
-    • Montant total de l’ensemble des commandes faites aujourd’hui
+   8 • Montant total de l’ensemble des commandes faites aujourd’hui
         // complique la lecture et pas nécessaire
+
         SELECT ( SUM(ligne_table.ligne_cmd_Qts * ligne_table.ligne_cmd_prix) )AS tot
         FROM  ligne_cmd ligne_table, 
         (
@@ -52,6 +69,9 @@ Sélection sur plusieurs tables
         ) com_table 
         where ligne_table.Commande_id = com_table.pId
 
+        //----------------------------------------------------------------
+        //
+        //-----------------------------------------------------------------
 
         // simpliest  way and more readable
         SELECT SUM(ligne_cmd.ligne_cmd_Qts * ligne_cmd.ligne_cmd_prix) AS tot
@@ -60,83 +80,82 @@ Sélection sur plusieurs tables
         and Commande.idCommande = ligne_cmd.Commande_id
 
 
-    • Liste des Articles dont le prix  est entre 20 et 40 euros
+   9 • Liste des Articles dont le total  est entre 20 et 40 euros
 
         SELECT * from Article 
         WHERE Article.Prix >= 20 
         AND Article.Prix <= 40
 
+    9.1 • Liste des commandes dont le prix  est entre 20 et 40 euros
+         
+     //  having est le where du group by (QUAND ON CHERCHE UN CRITERE CALCULÉ TEL QUE  TOTAL)
 
-      
-    • Liste des commandes d’un utilisateur
+     SELECT  Commande.idCommande, SUM(ligne_cmd.ligne_cmd_Qts * ligne_cmd.ligne_cmd_prix ) total
+     FROM Commande INNER JOIN ligne_cmd ON Commande.idCommande = ligne_cmd.Commande_id 
+     GROUP BY Commande.idCommande
+     HAVING total <= 40
+
+
+   10 • Liste des commandes d’un utilisateur
       
       SELECT * FROM Commande 
       WHERE Commande.User_id = 1
 
 
-    • Nombre de commandes par client
+   11 • Nombre de commandes par client
       
         SELECT COUNT(Commande.idCommande) FROM Commande WHERE Commande.User_id = 1
 
 
-    • Somme des montants de commandes par client
-
+[?]12 • Somme des montants de commandes par client
+        
+        SELECT SUM(ligne_cmd.ligne_cmd_Qts * ligne_cmd.ligne_cmd_prix),User.Nom 
+        FROM Commande INNER JOIN ligne_cmd ON Commande.idCommande = ligne_cmd.Commande_id 
+        INNER JOIN User ON  User.idUser = Commande.User_id
+        WHERE User_id = 1
       
-    • Liste des catégories disponibles (pour lesquelles les produits sont dispo)
+   13 • Liste des catégories disponibles (pour lesquelles les produits sont dispo)
 
         SELECT * FROM Categorie , Article 
         WHERE Categorie.idCategorie = Article.Categorie_id
         AND Article.Stock > 0
 
-    • Liste des utilisateurs (avec leur adresse) ayant passés une commande aujourd’hui
+   14 • Liste des utilisateurs (avec leur adresse) ayant passés une commande aujourd’hui
       
       SELECT * FROM User ,Adress, Commande
         WHERE 
         User.idUser = Adress.User_id 
-
         AND Commande.User_id = User.idUser 
-
         AND DATE(Commande.Date_de_Commande) = CURDATE()
 
 
-    • Montant moyen des commandes faites aujourd’hui
+[?]15 • Montant moyen des commandes faites aujourd’hui  
       
-        
+    
 
-    • Montant de la valeur du stock (somme des articles)
+   16 • Montant de la valeur du stock (somme des articles)
       
-    • Lister toutes les commandes ne contenant pas un produit donné.
-      
+        SELECT SUM(Article.Prix * Article.Stock) AS tot 
+        FROM Article 
+        WHERE Article.Stock > 0
+
+   17 • Lister toutes les commandes ne contenant pas un produit donné.
+
+
 
 Insertion et mise à jour et suppression de données
 
-    • Créer une commande de 3 articles différent (avec ses lignes de commande associées)
+   18 • Créer une commande de 3 articles différent (avec ses lignes de commande associées)
       
-    • Ajouter un produit avec sa catégorie et sa quantité
+ >  19 • Ajouter un produit avec sa catégorie et sa quantité
+         INSERT INTO `Article`(`Nom`, `Descripion`, `Poids`, `Prix`, `Stock`, `Image`, `Categorie_id`) 
+         VALUES ('App AJOUT','App qui Ajoute des données',18,15.5,50,'assets/noimage.svg',1) 
       
-    • Ajouter 100 à la quantité en stock d‘un produit
+ >  20 • Ajouter 100 à la quantité en stock d‘un produit
+         UPDATE `Article` SET `Stock`= Article.Stock + 100 WHERE Article.idArticle = 1
+
+   21 • Augmenter de 5% le prix des produits d’une catégorie donnée
       
-    • Augmenter de 5% le prix des produits d’une catégorie donnée
-      
-    • Supprimer un article
-      
-    • Supprimer les clients qui n’ont pas de commande
-
-
-
-
-
-
-
-
-
-
-
-
-
-   (pour une en particulier)
-	SELECT ( SUM(ligne_cmd.ligne_cmd_Qts * ligne_cmd.ligne_cmd_prix) )
-	AS tot
-	FROM ligne_cmd 
-	JOIN Commande  ON ligne_cmd.Commande_id = Commande.idCommande
-	WHERE ligne_cmd.Commande_id = 2)
+ >  22 • Supprimer un article
+        DELETE FROM `Article` WHERE idArticle = 1
+   23 • Supprimer les clients qui n’ont pas de commande

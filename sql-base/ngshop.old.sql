@@ -19,6 +19,40 @@ SET time_zone = "+00:00";
 --
 -- Base de données :  `ngshop`
 --
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `User`
+--
+
+CREATE TABLE `User` (
+  `idUser` int(11) NOT NULL,
+  `Nom` varchar(45) DEFAULT NULL,
+  `Prenom` varchar(45) DEFAULT NULL,
+  `Mail` varchar(45) DEFAULT NULL,
+  `Password` varchar(45) DEFAULT NULL,
+  `pseudo` varchar(50) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Contenu de la table `User`
+--
+
+INSERT INTO `User` (`idUser`, `Nom`, `Prenom`, `Mail`, `Password`, `pseudo`) VALUES
+(1, 'FAURE', 'JULIEN', 'jf@mail.com', '123456789', 'nautique'),
+(2, 'ALF', 'marie', 'am@mail.com', '123456789', 'marie666'),
+(3, 'TIBAULT', 'KEVIN', 'tk@mail.com', '123456789', 'elfique5'),
+(4, 'foster', 'kathy', 'jf@mail.com', '123456789', 'nautique'),
+(5, 'Bridden', 'Merlina', 'mbridden0@ocn.ne.jp', 'rr6UGke60K', 'mbridden0'),
+(6, 'Gurney', 'Jammie', 'jgurney1@indiegogo.com', 'g9tZF45vRy', 'jgurney1'),
+(7, 'Elayne', 'Pierri', 'epierri2@jigsy.com', 'RjE32YV', 'epierri2'),
+(8, 'Siemianowicz', 'Alessandro', 'asiemianowicz3@tripod.com', 'Prk5bgu5Rt0', 'asiemianowicz3'),
+(9, 'Mei', 'Trippitt', 'mtrippittt@bizjournals.com', 'uuqMVZ1qgWeY', 'mtrippittt'),
+(10, 'Deeyn', 'Hubane', 'dhubaneu@weather.com', 'nbbtBCEa', 'dhubaneu'),
+(11, 'Erena', 'Tanton', 'etantonv@cnbc.com', 'ZJz1XZnf7', 'etantonv'),
+(12, 'Maxine', 'Oxbie', 'moxbiew@pcworld.com', 'llpkkmzi1nD', 'moxbiew'),
+(13, 'Charmaine', 'Fareweather', 'cfareweatherx@tumblr.com', 'NjVSq27bkC5Y', 'cfareweatherx'),
+(14, 'Eamon', 'Lathwood', 'elathwoody@cdc.gov', '10qUqUBn6oT', 'elathwoody');
 
 -- --------------------------------------------------------
 
@@ -49,6 +83,32 @@ INSERT INTO `Adress` (`idAdress`, `Label`, `Nom`, `Prenom`, `Numero`, `Rue`, `Co
 (4, 'ADRESSE  PAPA', 'FAURE', 'MAURICE', '52', 'BL DES ANCIENS', '10 ARR', '75000', 'PARIS', 'FRANCE', 1),
 (5, 'adresse perso', 'alpha', 'raoul', '47', 'rue des fleurs', '', '38185', 'GRENOBLE', 'FRANCE', 2),
 (6, 'adresse memo', 'laventin', 'sonia', '78', 'av. des pins parasols', '', '75000', 'PARIS', 'FRANCE', 3);
+
+
+--
+-- Structure de la table `Categorie`
+--
+
+CREATE TABLE `Categorie` (
+  `idCategorie` int(11) NOT NULL,
+  `Nom` varchar(45) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Contenu de la table `Categorie`
+--
+
+INSERT INTO `Categorie` (`idCategorie`, `Nom`) VALUES
+(1, 'SECU'),
+(2, 'INF0RMATIQUE'),
+(3, 'ELECTRONIQUE'),
+(4, 'CONNECTIQUE'),
+(5, 'GAME'),
+(6, 'GESTION'),
+(7, 'NO APPLE'),
+(8, 'MUSIQUE');
+
+
 
 -- --------------------------------------------------------
 
@@ -87,30 +147,6 @@ INSERT INTO `Article` (`idArticle`, `Nom`, `Descripion`, `Poids`, `Prix`, `Stock
 (19, 'App Who is', 'app qui vous dit qui vous êtes ...', '0.75', '19.99', 178, 'assets/notFound.svg', 1);
 
 -- --------------------------------------------------------
-
---
--- Structure de la table `Categorie`
---
-
-CREATE TABLE `Categorie` (
-  `idCategorie` int(11) NOT NULL,
-  `Nom` varchar(45) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
---
--- Contenu de la table `Categorie`
---
-
-INSERT INTO `Categorie` (`idCategorie`, `Nom`) VALUES
-(1, 'SECU'),
-(2, 'INF0RMATIQUE'),
-(3, 'ELECTRONIQUE'),
-(4, 'CONNECTIQUE'),
-(5, 'GAME'),
-(6, 'GESTION'),
-(7, 'NO APPLE'),
-(8, 'MUSIQUE');
-
 -- --------------------------------------------------------
 
 --
@@ -181,40 +217,6 @@ CREATE TABLE `Promo` (
 INSERT INTO `Promo` (`idPromo`, `Nom`, `Date_de_Debut`, `Date_de_Fin`, `%_Remise`, `Prix_Remise`, `idArticle`) VALUES
 (1, 'BLACK FRIDAY', '2019-02-21 00:00:00', '2019-02-28 00:00:00', '5.0', NULL, 3);
 
--- --------------------------------------------------------
-
---
--- Structure de la table `User`
---
-
-CREATE TABLE `User` (
-  `idUser` int(11) NOT NULL,
-  `Nom` varchar(45) DEFAULT NULL,
-  `Prenom` varchar(45) DEFAULT NULL,
-  `Mail` varchar(45) DEFAULT NULL,
-  `Password` varchar(45) DEFAULT NULL,
-  `pseudo` varchar(50) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
---
--- Contenu de la table `User`
---
-
-INSERT INTO `User` (`idUser`, `Nom`, `Prenom`, `Mail`, `Password`, `pseudo`) VALUES
-(1, 'FAURE', 'JULIEN', 'jf@mail.com', '123456789', 'nautique'),
-(2, 'ALF', 'marie', 'am@mail.com', '123456789', 'marie666'),
-(3, 'TIBAULT', 'KEVIN', 'tk@mail.com', '123456789', 'elfique5'),
-(4, 'foster', 'kathy', 'jf@mail.com', '123456789', 'nautique'),
-(5, 'Bridden', 'Merlina', 'mbridden0@ocn.ne.jp', 'rr6UGke60K', 'mbridden0'),
-(6, 'Gurney', 'Jammie', 'jgurney1@indiegogo.com', 'g9tZF45vRy', 'jgurney1'),
-(7, 'Elayne', 'Pierri', 'epierri2@jigsy.com', 'RjE32YV', 'epierri2'),
-(8, 'Siemianowicz', 'Alessandro', 'asiemianowicz3@tripod.com', 'Prk5bgu5Rt0', 'asiemianowicz3'),
-(9, 'Mei', 'Trippitt', 'mtrippittt@bizjournals.com', 'uuqMVZ1qgWeY', 'mtrippittt'),
-(10, 'Deeyn', 'Hubane', 'dhubaneu@weather.com', 'nbbtBCEa', 'dhubaneu'),
-(11, 'Erena', 'Tanton', 'etantonv@cnbc.com', 'ZJz1XZnf7', 'etantonv'),
-(12, 'Maxine', 'Oxbie', 'moxbiew@pcworld.com', 'llpkkmzi1nD', 'moxbiew'),
-(13, 'Charmaine', 'Fareweather', 'cfareweatherx@tumblr.com', 'NjVSq27bkC5Y', 'cfareweatherx'),
-(14, 'Eamon', 'Lathwood', 'elathwoody@cdc.gov', '10qUqUBn6oT', 'elathwoody');
 
 --
 -- Index pour les tables exportées
