@@ -1,0 +1,96 @@
+Sélection sur une table 
+
+    • Liste des produits
+
+	    SELECT * FROM Article 		
+
+    • Liste des produits en rupture de stock (dont la quantité est “0”)
+     
+	    SELECT * FROM `Article` WHERE `Stock` = 0 ;
+
+    • Liste des commandes d’aujourd’hui classées par n° décroissant
+	
+        SELECT * FROM Commande where DATE(`Date_de_Commande`)=CURDATE();
+      
+    • Liste des commandes créées depuis les 10 derniers jours
+      
+        SELECT * FROM Commande  WHERE `Date_de_Commande` >= NOW() - INTERVAL 10 DAY;
+
+Sélection sur plusieurs tables
+
+    • Liste des produits (nom, quantité et prix unitaire nécessaire) d’une commande donnée
+
+        SELECT Article.Nom,ligne_cmd.ligne_cmd_Qts,Article.Prix FROM Article, 	Commande ,ligne_cmd 
+        WHERE ligne_cmd.Commande_id = Commande.idCommande 
+        AND   ligne_cmd.Article_id = Article.idArticle
+        AND   Commande.idCommande = 1;	
+
+    • Liste des utilisateurs habitant à Grenoble
+	
+        SELECT  * FROM  User,Adress 
+        WHERE User.idUser = Adress.User_id 
+        AND Adress.Ville = "GRENOBLE"
+
+    • Prix total de la dernière commande passée
+      	
+        SELECT ( SUM(primary_table.ligne_cmd_Qts * primary_table.ligne_cmd_prix) )AS tot
+        FROM  ligne_cmd primary_table, 
+        (SELECT MAX(Commande.idCommande) as pId FROM Commande) second_table 
+        where primary_table.Commande_id = second_table.pId
+	
+	
+
+    • Montant total de l’ensemble des commandes faites aujourd’hui
+
+
+    • Liste des commandes dont le prix est entre 20 et 40 euros
+      
+    • Liste des commandes d’un utilisateur
+      
+    • Nombre de commandes par client
+      
+    • Somme des montants de commandes par client
+      
+    • Liste des catégories disponibles (pour lesquelles les produits sont dispo)
+      
+    • Liste des utilisateurs (avec leur adresse) ayant passés une commande aujourd’hui
+      
+    • Montant moyen des commandes faites aujourd’hui
+      
+    • Montant de la valeur du stock (somme des articles)
+      
+    • Lister toutes les commandes ne contenant pas un produit donné.
+      
+
+Insertion et mise à jour et suppression de données
+
+    • Créer une commande de 3 articles différent (avec ses lignes de commande associées)
+      
+    • Ajouter un produit avec sa catégorie et sa quantité
+      
+    • Ajouter 100 à la quantité en stock d‘un produit
+      
+    • Augmenter de 5% le prix des produits d’une catégorie donnée
+      
+    • Supprimer un article
+      
+    • Supprimer les clients qui n’ont pas de commande
+
+
+
+
+
+
+
+
+
+
+
+
+
+   (pour une en particulier)
+	SELECT ( SUM(ligne_cmd.ligne_cmd_Qts * ligne_cmd.ligne_cmd_prix) )
+	AS tot
+	FROM ligne_cmd 
+	JOIN Commande  ON ligne_cmd.Commande_id = Commande.idCommande
+	WHERE ligne_cmd.Commande_id = 2)
