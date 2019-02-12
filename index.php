@@ -1,5 +1,15 @@
 <?php
 session_start();
+
+include 'class/database.php';
+
+$db = new \classes\Database();
+$db->stateObj();
+
+
+
+
+
 ?>
 <!DOCTYPE html>
 <html lang="fr">
