@@ -9,8 +9,8 @@ use PDO;
 class Database {
   private $_instance = null;
   private $_LOCAL_DNS = 'mysql:dbname=ngshop;host=localhost';
-  private $_LOCAL_USER = 'root';
-  private $_LOCAL_PASSWORD ='password';
+  private $_LOCAL_USER = 'jpb@localhost';
+  private $_LOCAL_PASSWORD ='A-1234-test';
    
   public function __construct() {
     $this->createConnexion();
@@ -41,6 +41,6 @@ class Database {
    * renvoie l'etat ok de la connexion
    */
   public function stateObj(){
-    print_r("Obj Database Crée avec succes.<br>");
+    print_r("Obj Database Object created with success.<br>");
   }
 }

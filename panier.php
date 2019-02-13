@@ -1,8 +1,21 @@
 <?php
-session_start();
-include 'functions/useful.php';
 
-$total = totalPanier($_SESSION);
+session_start();
+
+include_once 'functions/useful.php';
+include_once 'db-functions/connexion.php';
+include_once 'db-functions/reqs.php';
+
+$db = createConnexion();
+//var_dump($_SESSION);
+if (isset($_SESSION['panier'])){
+    $total = totalPanier($db,$_SESSION['panier']);
+}else{
+    $total = totalPanier($db,$_SESSION);
+}
+
+
+
 if (isset($_POST) && !empty($_POST)) {
 
     //-----------------------------------------------------------------------------------------------------------------
@@ -12,13 +25,15 @@ if (isset($_POST) && !empty($_POST)) {
         
         $u = 0;
         foreach ($_POST as $key => $value) {
-            if (is_numeric($key)) {
+    
+            if (is_numeric($value)) {
                 $u = $key + 1;
                 if (!array_key_exists('id_' . $u, $_SESSION)) {
                     $_SESSION['panier']['id_' . $u] = ['qts' => 1];
                 }
             }
         }
+       
     }
     //-----------------------------------------------------------------------------------------------------------------
     // delete dynamique----------------------------------------------------------------------------------------
@@ -34,7 +49,7 @@ if (isset($_POST) && !empty($_POST)) {
     //-----------------------------------------------------------------------------------------------------------------
     // recalcule du prix global
     //-----------------------------------------------------------------------------------------------------------------
-    $total = totalPanier($_SESSION['panier']);
+   $total = totalPanier($db,$_SESSION['panier']);
     if (isset($_POST['recalcule'])) {
         //echo " method recalcule <br>";
         // mise à jour Qts et msgError
@@ -51,7 +66,7 @@ if (isset($_POST) && !empty($_POST)) {
             }
         }
         // recalcule du prix final
-        $total = totalPanier($_SESSION['panier']);
+        $total = totalPanier($db,$_SESSION['panier']);
     }
 
     //-----------------------------------------------------------------------------------------------------------------
@@ -64,7 +79,7 @@ if (isset($_POST) && !empty($_POST)) {
     }
 }
 // affecte la listes des articles au format Array;
-$articles = generateCatalogue();
+//$articles = generateCatalogue();
 //jdebug($_SESSION);
 
 
@@ -134,19 +149,19 @@ $articles = generateCatalogue();
                 if (substr($key, 0, 3) == "id_") {
 
                     // l'article existe t'il dans l'array d'article
-                    if (isExistArticle($k)) {
+                    if (isExistArticle($db,$k)) {
+                    //        
+                    $art = getArticle($db,$k);
 
-                    $art = getArticleInfo($k);
+                    $err = isset($_SESSION['msgError' . $art->idArticle]);
 
-                    $err = isset($_SESSION['msgError' . $art['id']]);
-
-                        if (isset($_SESSION['msgError' . $art['id']])) {
+                        if (isset($_SESSION['msgError' . $art->idArticle])) {
                             // on affiche le message d'erreur pour cette Qts
                             ?>
                             <span class="w-100 p-3 bg-danger text-white text-center"><?php echo $_SESSION['msgError' . $art['id']] ?></span>
                             <?php
                             //on supprime le message d'errur apres usage
-                            unset($_SESSION['msgError' . $art['id']]);
+                            unset($_SESSION['msgError' . $art->idArticle]);
                         }
                         if ($err){   ?>
                             <div class="wcolMax col-md-12 d-flex flex-inline justify-content-between align-items-center bg-warning">
@@ -155,13 +170,13 @@ $articles = generateCatalogue();
                         ?>
                         <div class="wcolMax col-md-12 d-flex flex-inline justify-content-between align-items-center ">
                         <?php } ?>
-                        <img src="<?php echo $art['url']; ?> " class="art-img-px" width="45" height="45" alt="...">
-                            <?php echo $art['nom']; ?>
+                        <img src="<?php echo $art->Image ; ?> " class="art-img-px" width="45" height="45" alt="...">
+                            <?php echo $art->Nom; ?>
                             <p class="p-3 m-3">
-                                <?= $art['desc'] ?>
-                                <input class="width-qts" type="text" name="modifQts<?php echo $art['id'] ?>" value="<?php echo $_SESSION['panier']['id_' . $k]['qts'] ?>" size="4">
-                                <input class="btn btn-outline-danger" type="submit" name="deleteItem<?php echo $art['id'] ?>" value="supprimer cet article">
-                                <span class="bg-primary text-white p-3"><?= $art['prix'] . "  " . MajDevise("euros") ?></span>
+                                <?= $art->Desc ?>
+                                <input class="width-qts" type="text" name="modifQts<?php echo $art->idArticle ?>" value="<?php echo $_SESSION['panier']['id_' . $k]['qts'] ?>" size="4">
+                                <input class="btn btn-outline-danger" type="submit" name="deleteItem<?php echo $art->idArticle ?>" value="supprimer cet article">
+                                <span class="bg-primary text-white p-3"><?= $art->Prix . "  " . MajDevise("euros") ?></span>
                             </p>
                         </div>
                         <?php

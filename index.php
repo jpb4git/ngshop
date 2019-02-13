@@ -1,15 +1,6 @@
 <?php
 session_start();
 
-include 'class/database.php';
-
-$db = new \classes\Database();
-$db->stateObj();
-
-
-
-
-
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -41,6 +32,9 @@ $db->stateObj();
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="panier.php">Panier</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="test-db.php">db- test connexion</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="#"></a>

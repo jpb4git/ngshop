@@ -1,16 +1,19 @@
 <?php
-include 'functions/useful.php';
 
-//recupération du catalogue
-$articles = generateCatalogue();
+include_once 'functions/useful.php';
+include_once 'db-functions/connexion.php';
+include_once 'db-functions/reqs.php';
+
+$db = createConnexion();
+
 
 if (isset($_GET) && !empty($_GET['id'])) {
-    $art = getArticleInfo($_GET['id']);
+    $art = getArticle($db,$_GET['id']);
 }
 
 //recuperation des commentaires
-$commentaires = getCommentaires();
-
+//$commentaires = getCommentaires();
+//$article = getArticle($instance,$_GET['id']);
 ?>
 
 <!DOCTYPE html>
@@ -62,7 +65,7 @@ $commentaires = getCommentaires();
         <div class="row">
         <div class="col">
         <a  href="catalogue2.php" class="btn btn-success m-1 p-3"> Retour au catalogue</a>  
-            <h1 class="p-3 mt-3 mb-3 mr-1 ml-1 badge  w-100"><?= $art['nom'] ?></span></h1>
+            <h1 class="p-3 mt-3 mb-3 mr-1 ml-1 badge  w-100"><?= $art->Nom ?></span></h1>
         </div> 
         
         </div>
@@ -71,14 +74,14 @@ $commentaires = getCommentaires();
             <div class="col-sm-12 ">
                 <div class="card">
                     <div class="card-header d-flex justify-content-center bg-white">
-                        <img src="<?php echo $art['url']; ?>" class="art-img img-fluid w-25 card-img-top" alt="...">
+                        <img src="<?php echo $art->Image; ?>" class="art-img img-fluid w-25 card-img-top" alt="...">
                     </div>
                     <div class="card-body">
-                        <h5 class="card-title"><?= $art['nom'] ?></h5>
-                        <p class="card-text"><?= $art['desc'] ?></p>
-                        <p class="card-text"><?= $art['descFull'] ?></p>
+                        <h5 class="card-title"><?= $art->Nom ?></h5>
+                        <p class="card-text"><?= $art->Desc ?></p>
+                        <!--<p class="card-text"><?PHP //$art['descFull'] ?></p> -->
                         <p class="bg-secondary rounded p-3 text-white text-center">
-                            <?= $art['prix'] ?> Euros
+                            <?= $art->prix ?> Euros
                         </p>
                         <div class="card-footer d-flex justify-content-center bg-white">
                             <div class="col-sm-12 d-flex justify-content-center">
@@ -86,38 +89,7 @@ $commentaires = getCommentaires();
                         </div>
                         <div class="col-sm-12 d-flex justify-content-center mb-5 rounded">
                             <div class="row  mb-5 p-3">
-                                <?php
-                                //lister les commentaires pour cet article
-                                foreach ($commentaires as $value) {
-                                    if ($value['id'] == $art['id']) {
-                                        ?>
-                                        <div class="col-md-2 mb-3">
-                                            <img class=" w-25" src="<?php echo $value['url_avatar'] ?>" alt="">
-                                            <span class="ml-1 text-success"><?php echo $value['name'] ?></span>
-                                        </div>
-                                        <div class="col-md-7 mb-3"><?php echo $value['commentaire'] ?></div>
-                                        <div class="col-md-3">
-                                            <span>
-                                         <?php
-                                         for ($i = 0; $i < 5; $i++) {
-
-                                             if (intval($value['stars']) >= $i) {
-                                                 ?>
-                                                 <i class="material-icons text-success">star</i>
-                                                 <?php
-                                             } else { ?>
-                                                 <i class="material-icons text-success">star_border</i>
-                                                 <?php
-                                             }
-                                         }
-
-                                         ?>
-                                          </span>
-                                        </div>
-                                        <?php
-                                    }
-                                }
-                                ?>
+                               <?php include_once "templates/tpl_commentaires.php"  ?>
                             </div>
                         </div>
                     </div>
