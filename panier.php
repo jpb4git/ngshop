@@ -7,7 +7,7 @@ include_once 'db-functions/connexion.php';
 include_once 'db-functions/reqs.php';
 
 $db = createConnexion();
-//var_dump($_SESSION);
+
 if (isset($_SESSION['panier'])){
     $total = totalPanier($db,$_SESSION['panier']);
 }else{
@@ -27,13 +27,15 @@ if (isset($_POST) && !empty($_POST)) {
         foreach ($_POST as $key => $value) {
     
             if (is_numeric($value)) {
-                $u = $key + 1;
+                
+                $u = rtrim($key, "_") ;
+                  
                 if (!array_key_exists('id_' . $u, $_SESSION)) {
                     $_SESSION['panier']['id_' . $u] = ['qts' => 1];
                 }
             }
         }
-       
+    
     }
     //-----------------------------------------------------------------------------------------------------------------
     // delete dynamique----------------------------------------------------------------------------------------
@@ -135,19 +137,21 @@ if (isset($_POST) && !empty($_POST)) {
                 <h1 class="text-center w-100 p-3 m-3 rounded bg-success text-white">Panier</h1>
                 <h1 class="badge  w-100 p-3 m-3">Article(s) ajouté(s)</h1>
             </div>
+            <div class="w-100 d-flex justify-content-center p-2 m-2">
+            <input class="w-25 btn btn-danger p-1 m-2" type="submit" id="" name="vider" value="vider le panier">  
+                <input class="w-25 btn btn-outline-secondary p-1 m-2" type="submit" id="" name="recalcule" value="recalculer le panier">
+            </div>
             <div class="row">
             <?php
             $err = false;
             if (isset($_SESSION['panier'])){
-
-            
             foreach ($_SESSION['panier'] as $key => $value) {
                 // on recupère  l'id sans le prefixe
                 $k = substr($key, 3);
 
                 // test si la cle n'est pas msgError
                 if (substr($key, 0, 3) == "id_") {
-
+                     
                     // l'article existe t'il dans l'array d'article
                     if (isExistArticle($db,$k)) {
                     //        
@@ -184,13 +188,15 @@ if (isset($_POST) && !empty($_POST)) {
                 }
             }
             ?>
-            <div class="mb-5 p-5 wcolMax col-md-12 d-flex flex-inline justify-content-between align-items-center">
-              <input class="btn btn-outline-secondary" type="submit" id="" name="recalcule" value="recalculer le panier">
-              <input class="btn btn-danger" type="submit" id="" name="vider" value="vider le panier">
-              <div class="p-3 text-white bg-success rounded">
+            <div class="mb-5 p-5 wcolMax col-md-12 d-flex flex-inline justify-content-end align-items-center">
+              
+                <div class="w-25 text-right p-3 text-white bg-success rounded">
                   <?php echo "Total  : " . $total ?>
               </div>
             </div>
+           <div class="w-100 d-flex justify-content-center">
+           <a href="validation.php" class="p-2 m-0 w-75 btn btn-outline-success" type="submit" id="" name="valider-panier" >Valider mon panier</a>
+           </div> 
         </form>
         <?php
         }else{

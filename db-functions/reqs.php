@@ -119,7 +119,8 @@ function ArticlesInCommande($instance,$id){
     $sql = "
     SELECT Article.Nom,
            ligne_cmd.ligne_cmd_Qts,
-           Article.Prix 
+           Article.Prix,Article.Image,
+           Commande.commande_num 
     FROM Article,Commande ,ligne_cmd 
     WHERE ligne_cmd.Commande_id = Commande.idCommande 
     AND   ligne_cmd.Article_id = Article.idArticle
@@ -269,19 +270,19 @@ function totalPanier($instance,$arr)
     $k=0;
     $total = 0;
    
-   var_dump('total panier : arr : ' . $arr);
+  
     foreach ($arr as $key => $value) {
         // si l'on est sur un id
         if (substr($key, 0, 3) == "id_") {
-            var_dump(substr($key, 0, 3));
+            
             // on recupere l'id sans le prefixe
             $k = substr($key, 3);
-            var_dump('ID ARTICLE TRAIT : ' . $k . ' --  ');  
-            $tempPrice = (getLignePrix($instance,intval($k)));     
-            var_dump('TEMP PRICE  : '. $tempPrice . ' -- ');                        
+            
+            $tempPrice = floatval(getLignePrix($instance,intval($k)));     
+            
             $total += $tempPrice * intval($value['qts']) ; 
-            var_dump('TOTAL : '. $total);         
-            //$total += $articles[intval($k-1)]['prix'] * intval($value['qts']) ;
+            
+           
         }
     }
     return $total . " Euros";
@@ -294,12 +295,14 @@ function totalPanier($instance,$arr)
  * 
  */
 function getLignePrix($instance,$id){
+
     $sql = "SELECT Prix FROM Article WHERE idArticle = ?"; 
+
     $stmt = $instance->prepare($sql);
-    $stmt->execute([$id]);
+    $stmt->execute( [$id] );
     $result = $stmt->fetch();
     
-    return $result;
+    return $result->Prix;
 
 }
 
@@ -318,3 +321,124 @@ function isExistArticle($instance, $id)
     return $result > 0 ;
 
 }
+/*******************************************************VALIDATION PANIER ********************************************************* */
+/**
+ * createUser
+ * $instance : dbConnexion
+ * $Nom
+ * $Prenon
+ * $Email
+ * $Pseudo
+ * 
+ */
+function createUser($instance,$Nom,$Prenom,$Email,$Pseudo){
+    var_dump($Prenon);
+    $Pass = "AZERTYAZER"; // Camille ne va pas être content :)  
+    $stmt = $instance->prepare("INSERT INTO User (Nom,Prenom,Mail,Password,pseudo) VALUES (?,?,?,?,?)");
+
+  
+    
+    $stmt->bindParam(1,$Nom);
+    $stmt->bindParam(2,$Prenom);
+    $stmt->bindParam(3,$Email);
+    $stmt->bindParam(4,$Pass);
+    $stmt->bindParam(5,$Pseudo);
+
+   $stmt->execute();
+    return $instance->LastInsertId(); 
+   
+   }  
+
+
+   
+   
+/**
+ *  ajout d'une adresse dans la table adresse reliée à un User
+ * 
+ * 
+ * 
+ */
+function createAdress($instance,$idUser,$label,$num,$rue,$comp,$cp,$ville,$pays,$nom,$prenom){
+    
+    $stmt = $instance->prepare("INSERT INTO Adress (Label,Nom,Prenom,Numero,Rue,Complement,Cp,Ville,Pays,User_id) VALUES (?,?,?,?,?,?,?,?,?,?)");
+    $stmt->bindParam(1,$label);
+    $stmt->bindParam(2,$nom);
+    $stmt->bindParam(3,$prenom);
+    $stmt->bindParam(4,$num);
+    $stmt->bindParam(5,$rue);
+    $stmt->bindParam(6,$comp);
+    $stmt->bindParam(7,$cp);
+    $stmt->bindParam(8,$ville);
+    $stmt->bindParam(9,$pays);
+    $stmt->bindParam(10,$idUser);
+
+    $stmt->execute();
+    return $instance->LastInsertId(); 
+
+}
+
+
+
+/**
+ *  ajout d'une adresse dans la table adresse reliée à un User
+ * 
+ * 
+ * 
+ */
+function createCommande($instance,$idUserCreated,$id_adr_F,$id_adr_L){
+    $isExist = true;
+    
+    $cmdUnique = RandomString();
+    while ($isExist){
+        // num gen est dèjà en base ? 
+        $isExist = isNumComExist($instance,$cmdUnique);
+        // si oui on regenere 
+        if ($isExist){
+            $cmdUnique = RandomString();
+        }  
+    }
+    $stmt = $instance->prepare("INSERT INTO Commande (commande_num,Date_de_commande,Adress_id_livraison,Adress_id_facturation,User_id) VALUES (?,?,?,?,?)");
+    $stmt->bindParam(1,$cmdUnique);
+    $stmt->bindParam(2,date('Y-m-d H:i:s'));
+    $stmt->bindParam(3,$id_adr_L);
+    $stmt->bindParam(4,$id_adr_F);
+    $stmt->bindParam(5,$idUserCreated);
+
+    $stmt->execute();
+    return $instance->LastInsertId(); 
+
+}
+
+
+
+function createLigneCommande($instance,$idArticle,$idCommandCreated,$qts,$Prix){
+
+    $stmt = $instance->prepare("INSERT INTO ligne_cmd (Article_id,Commande_id,ligne_cmd_Qts,ligne_cmd_prix) VALUES (?,?,?,?)");
+    $stmt->bindParam(1,$idArticle);
+    $stmt->bindParam(2,$idCommandCreated);
+    $stmt->bindParam(3,$qts);
+    $stmt->bindParam(4,$Prix);
+  
+    $stmt->execute();
+    
+
+
+}    
+
+
+
+/**
+ * 
+ *  
+ * 
+ */
+function   isNumComExist($instance,$numCom){
+    $sql = "SELECT * FROM Commande  WHERE commande_num =? ";
+    $stmt = $instance->prepare($sql);
+    $stmt->execute([$numCom]);
+    return $stmt->rowCount() > 0 ;
+    
+
+}
+
+
