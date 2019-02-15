@@ -56,3 +56,12 @@ function SetColor($color)
     }
     return "\e[1;37";
 }
+
+function secureData($data){
+    if(is_array($data)){
+        $safeData = array_map ( 'htmlspecialchars' , $data );
+    }else{
+        $safeData =  htmlspecialchars($data);
+    }
+    return $safeData;
+}

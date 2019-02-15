@@ -149,11 +149,8 @@ if (isset($_POST) && !empty($_POST)) {
                      
                     // l'article existe t'il dans la base
                     if (isExistArticle($db,$k)) {
-                    //        
-                    $art = getArticle($db,$k);
-
-                    $err = isset($_SESSION['msgError' . $art->id_Article]);
-
+                        $art = getArticle($db,$k);
+                        $err = isset($_SESSION['msgError' . $art->id_Article]);
                         if (isset($_SESSION['msgError' . $art->id_Article])) {
                             // on affiche le message d'erreur pour cette Qts
                             ?>

@@ -1,6 +1,6 @@
 <?php
-namespace Classes;
-use PDO;
+
+
 /**
  * Class Database
  * gère la connexion à la base de donnée

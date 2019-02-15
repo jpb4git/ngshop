@@ -284,6 +284,11 @@ function CommandSumByUser($instance, $id)
 
 }
 
+/**
+ * @param $instance         : instance de la base de données
+ * @param $id_Command       : id de la commande
+ * @return mixed
+ */
 function getAdressOnCommand($instance, $id_Command)
 {
 
@@ -304,20 +309,13 @@ function totalPanier($instance, $arr)
 {
     $k = 0;
     $total = 0;
-
-
     foreach ($arr as $key => $value) {
         // si l'on est sur un id
         if (substr($key, 0, 3) == "id_") {
-
             // on recupere l'id sans le prefixe
             $k = substr($key, 3);
-
             $tempPrice = floatval(getLignePrix($instance, intval($k)));
-
             $total += $tempPrice * intval($value['qts']);
-
-
         }
     }
     return $total . " Euros";
@@ -371,7 +369,7 @@ function isExistArticle($instance, $id)
 function createUser($instance, $Nom, $Prenom, $Email, $Pseudo)
 {
 
-    $Pass = "AZERTYAZER"; // Camille ne va pas être content :)  
+    $Pass = "AZERTYAZER";
     $stmt = $instance->prepare("INSERT INTO User (Nom,Prenom,Mail,Password,Pseudo) VALUES (?,?,?,?,?)");
 
 

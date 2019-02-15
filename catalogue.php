@@ -5,11 +5,7 @@ include_once 'functions/useful.php';
 include_once 'db-functions/connexion.php';
 include_once 'db-functions/reqs.php';
 
-
-
 $db = createConnexion();
-
-
 $articles = getAllArticles($db);
 
 ?>
