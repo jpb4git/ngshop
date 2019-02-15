@@ -35,7 +35,7 @@ CREATE TABLE `Categorie` (
 -- Contenu de la table `Categorie`
 --
 
-INSERT INTO `Categorie` (`idCategorie`, `Nom`) VALUES
+INSERT INTO `Categorie` (id_Categorie, `Nom`) VALUES
 (1, 'SECU'),
 (2, 'INF0RMATIQUE');
 
@@ -47,7 +47,7 @@ INSERT INTO `Categorie` (`idCategorie`, `Nom`) VALUES
 -- Index pour la table `Categorie`
 --
 ALTER TABLE `Categorie`
-  ADD PRIMARY KEY (`idCategorie`);
+  ADD PRIMARY KEY (id_Categorie);
 
 --
 -- AUTO_INCREMENT pour les tables exportées

@@ -22,16 +22,16 @@ if (isset($_POST) && !empty($_POST)) {
     // ajout article au panier
     //-----------------------------------------------------------------------------------------------------------------
     if (isset($_POST['ajout']) && $_POST['ajout'] == "Ajouter au panier") {
-        
+
         $u = 0;
         foreach ($_POST as $key => $value) {
     
             if (is_numeric($value)) {
-                
                 $u = rtrim($key, "_") ;
-                  
-                if (!array_key_exists('id_' . $u, $_SESSION)) {
+                if (!array_key_exists('id_' . $u, $_SESSION['panier'])) {
                     $_SESSION['panier']['id_' . $u] = ['qts' => 1];
+                }else{
+                    $_SESSION['panier']['id_' . $u]['qts'] =  intval($_SESSION['panier']['id_' . $u]['qts']) + 1 ;
                 }
             }
         }
@@ -80,9 +80,7 @@ if (isset($_POST) && !empty($_POST)) {
 
     }
 }
-// affecte la listes des articles au format Array;
-//$articles = generateCatalogue();
-//jdebug($_SESSION);
+
 
 
 ?>
@@ -145,6 +143,7 @@ if (isset($_POST) && !empty($_POST)) {
             <?php
             $err = false;
             if (isset($_SESSION['panier'])){
+
             foreach ($_SESSION['panier'] as $key => $value) {
                 // on recupère  l'id sans le prefixe
                 $k = substr($key, 3);
@@ -152,20 +151,20 @@ if (isset($_POST) && !empty($_POST)) {
                 // test si la cle n'est pas msgError
                 if (substr($key, 0, 3) == "id_") {
                      
-                    // l'article existe t'il dans l'array d'article
+                    // l'article existe t'il dans la base
                     if (isExistArticle($db,$k)) {
                     //        
                     $art = getArticle($db,$k);
 
-                    $err = isset($_SESSION['msgError' . $art->idArticle]);
+                    $err = isset($_SESSION['msgError' . $art->id_Article]);
 
-                        if (isset($_SESSION['msgError' . $art->idArticle])) {
+                        if (isset($_SESSION['msgError' . $art->id_Article])) {
                             // on affiche le message d'erreur pour cette Qts
                             ?>
-                            <span class="w-100 p-3 bg-danger text-white text-center"><?php echo $_SESSION['msgError' . $art['id']] ?></span>
+                            <span class="w-100 p-3 bg-danger text-white text-center"><?php echo $_SESSION['msgError' . $art->id_Article] ?></span>
                             <?php
                             //on supprime le message d'errur apres usage
-                            unset($_SESSION['msgError' . $art->idArticle]);
+                            unset($_SESSION['msgError' . $art->id_Article]);
                         }
                         if ($err){   ?>
                             <div class="wcolMax col-md-12 d-flex flex-inline justify-content-between align-items-center bg-warning">
@@ -174,12 +173,12 @@ if (isset($_POST) && !empty($_POST)) {
                         ?>
                         <div class="wcolMax col-md-12 d-flex flex-inline justify-content-between align-items-center ">
                         <?php } ?>
-                        <img src="<?php echo $art->Image ; ?> " class="art-img-px" width="45" height="45" alt="...">
+                        <img src="<?php echo $art->Urlimage ; ?> " class="art-img-px" width="45" height="45" alt="...">
                             <?php echo $art->Nom; ?>
                             <p class="p-3 m-3">
                                 <?= $art->Desc ?>
-                                <input class="width-qts" type="text" name="modifQts<?php echo $art->idArticle ?>" value="<?php echo $_SESSION['panier']['id_' . $k]['qts'] ?>" size="4">
-                                <input class="btn btn-outline-danger" type="submit" name="deleteItem<?php echo $art->idArticle ?>" value="supprimer cet article">
+                                <input class="width-qts" type="text" name="modifQts<?php echo $art->id_Article ?>" value="<?php echo $_SESSION['panier']['id_' . $k]['qts'] ?>" size="4">
+                                <input class="btn btn-outline-danger" type="submit" name="deleteItem<?php echo $art->id_Article ?>" value="supprimer cet article">
                                 <span class="bg-primary text-white p-3"><?= $art->Prix . "  " . MajDevise("euros") ?></span>
                             </p>
                         </div>
@@ -195,7 +194,7 @@ if (isset($_POST) && !empty($_POST)) {
               </div>
             </div>
            <div class="w-100 d-flex justify-content-center">
-           <a href="validation.php" class="p-2 m-0 w-75 btn btn-outline-success" type="submit" id="" name="valider-panier" >Valider mon panier</a>
+           <a href="validation.php" class="p-2 mb-5 w-75 btn btn-outline-success" type="submit" id="" name="valider-panier" >Valider mon panier</a>
            </div> 
         </form>
         <?php

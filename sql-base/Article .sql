@@ -41,7 +41,7 @@ CREATE TABLE `Article` (
 -- Contenu de la table `Article`
 --
 
-INSERT INTO `Article` (`idArticle`, `Nom`, `Descripion`, `Poids`, `Prix`, `Stock`, `Image`, `Categorie_id`) VALUES
+INSERT INTO `Article` (id_Article, `Nom`, `Descripion`, `Poids`, `Prix`, `Stock`, Urlimage, `Categorie_id`) VALUES
 (1, 'App shield power !', 'une application qui vous protèges', '1.00', '599.00', 50, 'assets/icon-shield-orange.svg', 1),
 (2, 'App hub Green', 'Une application qui fait pousser vos plantes', '10.00', '25.00', 50, 'assets/icon-hub-green.svg', 1),
 (3, 'App hub blue', 'Une application qui est bleu', '2.50', '52.00', 40, 'assets/icon-hub-blue.svg', 1),
@@ -55,7 +55,7 @@ INSERT INTO `Article` (`idArticle`, `Nom`, `Descripion`, `Poids`, `Prix`, `Stock
 -- Index pour la table `Article`
 --
 ALTER TABLE `Article`
-  ADD PRIMARY KEY (`idArticle`),
+  ADD PRIMARY KEY (id_Article),
   ADD KEY `fk_Article_Categorie1_idx` (`Categorie_id`);
 
 --
@@ -75,7 +75,7 @@ ALTER TABLE `Article`
 -- Contraintes pour la table `Article`
 --
 ALTER TABLE `Article`
-  ADD CONSTRAINT `fk_Article_Categorie1` FOREIGN KEY (`Categorie_id`) REFERENCES `Categorie` (`idCategorie`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+  ADD CONSTRAINT `fk_Article_Categorie1` FOREIGN KEY (`Categorie_id`) REFERENCES `Categorie` (id_Categorie) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

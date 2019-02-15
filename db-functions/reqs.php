@@ -23,7 +23,7 @@ function getAllArticles($instance){
  * 
  */
 function getArticle($instance ,$id){
-    $sql = "SELECT * FROM Article WHERE idArticle =?";
+    $sql = "SELECT * FROM Article WHERE id_Article =?";
     $stmt = $instance->prepare($sql);
     $stmt->execute([$id]);
     $result = $stmt->fetch();
@@ -119,12 +119,12 @@ function ArticlesInCommande($instance,$id){
     $sql = "
     SELECT Article.Nom,
            ligne_cmd.ligne_cmd_Qts,
-           Article.Prix,Article.Image,
-           Commande.commande_num 
+           Article.Prix,Article.Urlimage,
+           Commande.Unique_Num_Command 
     FROM Article,Commande ,ligne_cmd 
-    WHERE ligne_cmd.Commande_id = Commande.idCommande 
-    AND   ligne_cmd.Article_id = Article.idArticle
-    AND   Commande.idCommande =?;	
+    WHERE ligne_cmd.Commande_id = Commande.id_Commande 
+    AND   ligne_cmd.Article_id = Article.id_Article
+    AND   Commande.id_Commande =?;	
     ";
     $stmt = $instance->prepare($sql);
     $stmt->execute([$id]);
@@ -143,9 +143,9 @@ function ArticlesInCommande($instance,$id){
  */
 function FindUserInTown($instance,$search){
     $sql = "
-    SELECT  User.nom ,Adress.Ville
-    FROM  User INNER JOIN Adress ON  User.idUser = Adress.User_id 
-    WHERE  Adress.Ville =?";	
+    SELECT  User.nom ,Address.Ville
+    FROM  User INNER JOIN Address ON  User.idUser = Address.User_id 
+    WHERE  Address.Ville =?";
     
     $stmt = $instance->prepare($sql);
     $stmt->execute([$search]);
@@ -261,6 +261,18 @@ function CommandSumByUser($instance,$id){
     return $result;
     
 }
+
+function getAdressOnCommand($instance,$id_Command){
+
+    $sql = "SELECT * FROM Commande, Address  WHERE Address.User_id  = Commande.User_id AND Commande.id_Commande =?";
+    $stmt = $instance->prepare($sql);
+    $stmt->execute([$id_Command]);
+    $result = $stmt->fetchall();
+
+    return $result;
+
+}
+
 /**
  * Total panier 
  *  renvoie le total de la ligne  en Euros
@@ -296,7 +308,7 @@ function totalPanier($instance,$arr)
  */
 function getLignePrix($instance,$id){
 
-    $sql = "SELECT Prix FROM Article WHERE idArticle = ?"; 
+    $sql = "SELECT Prix FROM Article WHERE id_Article = ?";
 
     $stmt = $instance->prepare($sql);
     $stmt->execute( [$id] );
@@ -313,7 +325,7 @@ function getLignePrix($instance,$id){
  */
 function isExistArticle($instance, $id)
 {
-    $sql = "SELECT idArticle FROM Article WHERE idArticle = ?"; 
+    $sql = "SELECT id_Article FROM Article WHERE id_Article = ?";
     $stmt = $instance->prepare($sql);
     $stmt->execute([$id]);
     $result = $stmt->fetch();
@@ -332,9 +344,9 @@ function isExistArticle($instance, $id)
  * 
  */
 function createUser($instance,$Nom,$Prenom,$Email,$Pseudo){
-    var_dump($Prenon);
+
     $Pass = "AZERTYAZER"; // Camille ne va pas être content :)  
-    $stmt = $instance->prepare("INSERT INTO User (Nom,Prenom,Mail,Password,pseudo) VALUES (?,?,?,?,?)");
+    $stmt = $instance->prepare("INSERT INTO User (Nom,Prenom,Mail,Password,Pseudo) VALUES (?,?,?,?,?)");
 
   
     
@@ -360,7 +372,7 @@ function createUser($instance,$Nom,$Prenom,$Email,$Pseudo){
  */
 function createAdress($instance,$idUser,$label,$num,$rue,$comp,$cp,$ville,$pays,$nom,$prenom){
     
-    $stmt = $instance->prepare("INSERT INTO Adress (Label,Nom,Prenom,Numero,Rue,Complement,Cp,Ville,Pays,User_id) VALUES (?,?,?,?,?,?,?,?,?,?)");
+    $stmt = $instance->prepare("INSERT INTO Address (Label_Adress,Nom_Address,Prenom_Adress,Num_Adress,Rue_Adress,Complement,Cp_Adress,Ville_Adress,Pays_Adress,User_id) VALUES (?,?,?,?,?,?,?,?,?,?)");
     $stmt->bindParam(1,$label);
     $stmt->bindParam(2,$nom);
     $stmt->bindParam(3,$prenom);
@@ -397,7 +409,7 @@ function createCommande($instance,$idUserCreated,$id_adr_F,$id_adr_L){
             $cmdUnique = RandomString();
         }  
     }
-    $stmt = $instance->prepare("INSERT INTO Commande (commande_num,Date_de_commande,Adress_id_livraison,Adress_id_facturation,User_id) VALUES (?,?,?,?,?)");
+    $stmt = $instance->prepare("INSERT INTO Commande (Unique_Num_Command,Date_de_commande,Adress_id_livraison,Adress_id_facturation,User_id) VALUES (?,?,?,?,?)");
     $stmt->bindParam(1,$cmdUnique);
     $stmt->bindParam(2,date('Y-m-d H:i:s'));
     $stmt->bindParam(3,$id_adr_L);
@@ -433,7 +445,7 @@ function createLigneCommande($instance,$idArticle,$idCommandCreated,$qts,$Prix){
  * 
  */
 function   isNumComExist($instance,$numCom){
-    $sql = "SELECT * FROM Commande  WHERE commande_num =? ";
+    $sql = "SELECT * FROM Commande  WHERE Unique_Num_Command =? ";
     $stmt = $instance->prepare($sql);
     $stmt->execute([$numCom]);
     return $stmt->rowCount() > 0 ;

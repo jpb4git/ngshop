@@ -6,11 +6,13 @@ include_once 'db-functions/reqs.php';
 
 $db = createConnexion();
 
-if (isset($_GET['commande'])){
+if (isset($_GET['commande'])) {
 
     $id_commande = $_GET['commande'];
-    $result  = ArticlesInCommande($db,$id_commande);
-    
+    $result = ArticlesInCommande($db, $id_commande);
+
+    $addrs = getAdressOnCommand($db, $id_commande);
+    jdebug($addrs);
 }
 
 ?>
@@ -19,7 +21,7 @@ if (isset($_GET['commande'])){
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Facture Client  ngShop</title>
+    <title>Facture Client ngShop</title>
     <link href="https://fonts.googleapis.com/css?family=Ubuntu+Condensed" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css"
@@ -31,8 +33,9 @@ if (isset($_GET['commande'])){
 <header>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <a class="navbar-brand" href="#">NgShop</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav">
@@ -51,30 +54,70 @@ if (isset($_GET['commande'])){
                 <li class="nav-item">
                     <a class="nav-link" href="#"></a>
                 </li>
-
             </ul>
         </div>
     </nav>
 </header>
 <div class="container-fluid">
-        <?php include 'header.php'; ?>
-    </div>
+    <?php include 'header.php'; ?>
+</div>
 <main>
     <div class="container mt-5 mb-5">
         <div class="row">
-            <div class="col-sm-12 mb-5 mt-5">
-                <h5 class="w-100 text-center bg-info text-white p-3">votre commande a bien été enregistrée.  </h5>
+            <div class="col-sm-12 mb-1 mt-5">
+                <h5 class="w-100 text-center bg-info text-white p-3">votre commande a bien été enregistrée. </h5>
             </div>
-            <div class="col-sm-12 mt-5">
-             <h4 class="w-100 text-center bg-info text-white p-3"> Numéro Unique de votre Commande : <strong> <?php  echo $result[0]->commande_num ;?> </strong></h4>
+            <div class="col-sm-12 mt-1">
+                <h4 class="w-100 text-center bg-warning text-white p-3"> Numéro Unique de votre Commande :
+                    <strong> <?php echo $result[0]->Unique_Num_Command; ?> </strong></h4>
             </div>
         </div>
 
+        <div class="row  p-1">
+            <?php
+            $n =0;
+            foreach ($addrs as $addr) {
+
+                ?>
+                <div class="col-sm-12 col-md-6 w-50 bg-light text-center">
+                    <h4> <?php if ($n %  2 == 0 ){echo ('Adresse de Facturation');}else{echo ('Adresse de Livraison');} $n++;?></h4>
+                    <h4> <?php echo($addr->Label_Adress ); ?></h4>
+                    <hr class="my-4">
+
+                    <p>
+                        <?php echo($addr->Nom_Address . ' ' . $addr->Prenom_Adress . "<br>"); ?>
+                    </p>
+                    <p>
+                        <?php echo($addr->Num_Adress . ' ' . $addr->Rue_Adress . "<br>"); ?>
+                    </p>
+                    <p>
+                        <?php echo($addr->Complement . "<br>"); ?>
+                    </p>
+                    <p>
+                        <?php echo($addr->Cp_Adress . ' ' . $addr->Ville_Adress . "<br>"); ?>
+                    </p>
+                    <p>
+                        <?php echo($addr->Pays_Adress . "<br>"); ?>
+                    </p>
+
+
+                    <hr class="my-4">
+                    <p>
+
+                    </p>
+
+                </div>
+            <?php } ?>
+
+        </div>
+
+
         <div class="row">
 
-        <?php for($i = 0 ;$i < count($result);$i++){  ?>
-            <div class="wcolMax col-md-12 d-flex flex-inline justify-content-between align-items-center">
-                    <img src="<?php echo $result[$i]->Image ; ?> " class="art-img-px" width="45" height="45" alt="...">
+            <?php for ($i = 0; $i < count($result); $i++) { ?>
+                <div class="wcolMax col-md-12 d-flex flex-inline justify-content-between align-items-center">
+                    <img src="<?php echo $result[$i]->Urlimage; ?> " class="art-img-px" width="45" height="45"
+                         alt="...">
                     <?php echo $result[$i]->Nom; ?>
                     <p class="p-3 m-3">
                         <?php $result[$i]->Desc ?>
@@ -82,17 +125,17 @@ if (isset($_GET['commande'])){
                         <?php echo $result[$i]->ligne_cmd_Qts; ?></span>
                         <span class="bg-primary text-white p-3">
                             Prix Unitaire :
-                            <?php  echo $result[$i]->Prix . "  " . MajDevise("euros") ?>
+                            <?php echo $result[$i]->Prix . "  " . MajDevise("euros") ?>
                         </span>
                     </p>
-            </div> 
-         <?php  }  ?>     
-            
+                </div>
+            <?php } ?>
+
             <div class="col-sm-12">
-          
+
             </div>
-    
-     </div>
+
+        </div>
 </main>
 <footer>
     <div class="container">
@@ -107,7 +150,6 @@ if (isset($_GET['commande'])){
 
         </div>
     </div>
-
 
 
 </footer>

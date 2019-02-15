@@ -1,5 +1,5 @@
 <?php
-
+session_start();
 include_once'class/database.php';
 include_once 'functions/useful.php';
 include_once 'db-functions/connexion.php';

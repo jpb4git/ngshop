@@ -44,7 +44,7 @@ CREATE TABLE `Adress` (
 -- Contenu de la table `Adress`
 --
 
-INSERT INTO `Adress` (`idAdress`, `Label`, `Nom`, `Prenom`, `Numero`, `Rue`, `Complement`, `Cp`, `Ville`, `Pays`, `User_id`) VALUES
+INSERT INTO Address (id_Address, Label_Adress, Nom_Address, Prenom_Adress, Num_Adress, Rue_Adress, `Complement`, Cp_Adress, Ville_Adress, Pays_Adress, `User_id`) VALUES
 (3, 'adresse maison ', 'FAURE', 'JULIEN', '6', 'RUE DES SAULES', '', '26000', 'VALENCE', 'FRANCE', 1),
 (4, 'ADRESSE  PAPA', 'FAURE', 'MAURICE', '52', 'BL DES ANCIENS', '10 ARR', '75000', 'PARIS', 'FRANCE', 1),
 (5, 'adresse perso', 'alpha', 'raoul', '47', 'rue des fleurs', '', '38185', 'GRENOBLE', 'FRANCE', 2),
@@ -71,7 +71,7 @@ CREATE TABLE `Article` (
 -- Contenu de la table `Article`
 --
 
-INSERT INTO `Article` (`idArticle`, `Nom`, `Descripion`, `Poids`, `Prix`, `Stock`, `Image`, `Categorie_id`) VALUES
+INSERT INTO `Article` (id_Article, `Nom`, `Descripion`, `Poids`, `Prix`, `Stock`, Urlimage, `Categorie_id`) VALUES
 (1, 'App shield power !', 'une application qui vous protèges', '1.00', '10.00', 150, 'assets/icon-shield-orange.svg', 1),
 (2, 'App hub Green', 'Une application qui fait pousser vos plantes', '10.00', '25.00', 50, 'assets/icon-hub-green.svg', 1),
 (3, 'App hub blue', 'Une application qui est bleu', '2.50', '52.00', 40, 'assets/icon-hub-blue.svg', 1),
@@ -143,19 +143,19 @@ INSERT INTO `Commande` (`idCommande`, `commande_num`, `Date_de_Commande`, `Adres
 --
 
 CREATE TABLE `Commentaire` (
-  `com_id` int(11) NOT NULL,
-  `com_name` varchar(55) NOT NULL,
-  `url_avatar` varchar(255) DEFAULT NULL,
+  `id_Com` int(11) NOT NULL,
+  `Name` varchar(55) NOT NULL,
+  `Url_avatar` varchar(255) DEFAULT NULL,
   `id_article` int(11) NOT NULL,
-  `commentaire` varchar(255) DEFAULT NULL,
-  `stars` int(11) DEFAULT NULL
+  `Commentaire` varchar(255) DEFAULT NULL,
+  `Stars` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Contenu de la table `Commentaire`
 --
 
-INSERT INTO `Commentaire` (`com_id`, `com_name`, `url_avatar`, `id_article`, `commentaire`, `stars`) VALUES
+INSERT INTO `Commentaire` (`id_Com`, `Name`, `url_avatar`, `id_article`, `commentaire`, `Stars`) VALUES
 (1, 'marc', 'assets/avatar1.png', 1, 'super appli !!!', 3),
 (2, 'elliot', 'assets/avatar2.png', 2, 'manque plein de trucs sur cette appli :(', 1);
 

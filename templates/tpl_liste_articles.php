@@ -4,27 +4,28 @@
         <div class="row panier-row">
             <form action="panier.php" method="post">
                 <?php
-                for ($i = 0 ; $i < count($articles); $i++) { ?>
+                foreach ($articles as $article){ ?>
                     <div class="col-sm-12 ">
                         <div class="div row">
                             <div class="col-md-2 mb-5">
-                                <img src="<?php echo $articles[$i]->Image; ?> " class="art-img-px" width="45" height="45" alt="...">
+
+                                <img src="<?php echo $article->Urlimage; ?> " class="art-img-px" width="45" height="45" alt="...">
                             </div>
                             <div class="col-md-3">
-                            <a href="article.php?id=<?= $articles[$i]->idArticle ?>" class="d-flex justify-content-between  btn btn-info w-100 text-center"> 
-                                <?= $articles[$i]->Nom ?>
+                            <a href="article.php?id=<?= $article->id_Article ?>" class="d-flex justify-content-between  btn btn-info w-100 text-center">
+                                <?= $article->Nom ?>
                                 <i class="d-flex ml-1 material-icons">visibility</i>
                             </a>    
                             
                             </div>
                             <div class="col-md-5 d-flex justify-content-end">
-                                <p class=""><?= $articles[$i]->Desc ?>
-                                    <span class="bg-primary text-white p-3"><?= $articles[$i]->Prix . "  " . MajDevise("euros") ?></span>
+                                <p class=""><?= $article->Description ?>
+                                    <span class="bg-primary text-white p-3"><?= $article->Prix . "  " . MajDevise("euros") ?></span>
                                 </p>
                             </div>
                             <div class="col-md-2">
                                 <label>Add </label>
-                                <input type="checkbox" id="<?php echo $articles[$i]->idArticle;?>" name="<?php echo $articles[$i]->idArticle; ?> "value="<?php echo $articles[$i]->idArticle; ?>"><br>
+                                <input type="checkbox" id="<?php echo $article->id_Article;?>" name="<?php echo $article->id_Article; ?> "value="<?php echo $article->id_Article; ?>"><br>
                             </div>
                         </div>
                     </div>

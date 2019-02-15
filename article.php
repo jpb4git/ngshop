@@ -11,9 +11,6 @@ if (isset($_GET) && !empty($_GET['id'])) {
     $art = getArticle($db,$_GET['id']);
 }
 
-//recuperation des commentaires
-//$commentaires = getCommentaires();
-//$article = getArticle($instance,$_GET['id']);
 ?>
 
 <!DOCTYPE html>
@@ -74,14 +71,15 @@ if (isset($_GET) && !empty($_GET['id'])) {
             <div class="col-sm-12 ">
                 <div class="card">
                     <div class="card-header d-flex justify-content-center bg-white">
-                        <img src="<?php echo $art->Image; ?>" class="art-img img-fluid w-25 card-img-top" alt="...">
+
+                        <img src="<?php echo $art->Urlimage; ?>" class="art-img img-fluid w-25 card-img-top" alt="...">
                     </div>
                     <div class="card-body">
                         <h5 class="card-title"><?= $art->Nom ?></h5>
                         <p class="card-text"><?= $art->Desc ?></p>
                         <!--<p class="card-text"><?PHP //$art['descFull'] ?></p> -->
                         <p class="bg-secondary rounded p-3 text-white text-center">
-                            <?= $art->prix ?> Euros
+                            <?= $art->Prix ?> Euros
                         </p>
                         <div class="card-footer d-flex justify-content-center bg-white">
                             <div class="col-sm-12 d-flex justify-content-center">
