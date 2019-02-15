@@ -232,10 +232,8 @@ if (isset($_SESSION['panier'])) {
                                         <p class="p-3 m-3">
                                             <?= $art->Desc ?>
                                             <span>Qts : <?php echo $_SESSION['panier']['id_' . $k]['qts'] ?></span>
-                                            <span class="bg-primary text-white p-3">
-                                        Prix Unitaire :
-                                        <?= $art->Prix . "  " . MajDevise("euros") ?>
-                                    </span>
+                                            <span class="bg-primary text-white p-3"> Prix Unitaire : <?= $art->Prix . "  " . MajDevise("euros") ?></span>
+                                            <span class="bg-secondary text-white p-3"><?= $art->Prix * $_SESSION['panier']['id_' . $k]['qts']. "  " . MajDevise("euros") ?></span>
                                         </p>
                                     </div>
                                     <?php

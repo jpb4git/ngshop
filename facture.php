@@ -9,10 +9,10 @@ $db = createConnexion();
 if (isset($_GET['commande'])) {
 
     $id_commande = $_GET['commande'];
-    $result = ArticlesInCommande($db, $id_commande);
+    $articles = ArticlesInCommande($db, $id_commande);
 
     $addrs = getAdressOnCommand($db, $id_commande);
-    jdebug($addrs);
+
 }
 
 ?>
@@ -48,9 +48,7 @@ if (isset($_GET['commande'])) {
                 <li class="nav-item">
                     <a class="nav-link" href="panier.php">Panier</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="test-db.php">db- test connexion</a>
-                </li>
+
                 <li class="nav-item">
                     <a class="nav-link" href="#"></a>
                 </li>
@@ -69,19 +67,22 @@ if (isset($_GET['commande'])) {
             </div>
             <div class="col-sm-12 mt-1">
                 <h4 class="w-100 text-center bg-warning text-white p-3"> Numéro Unique de votre Commande :
-                    <strong> <?php echo $result[0]->Unique_Num_Command; ?> </strong></h4>
+                    <strong> <?php echo $articles[0]->Unique_Num_Command; ?> </strong></h4>
             </div>
         </div>
 
         <div class="row  p-1">
             <?php
-            $n =0;
-            foreach ($addrs as $addr) {
-
-                ?>
+            $n = 0;
+            foreach ($addrs as $addr) { ?>
                 <div class="col-sm-12 col-md-6 w-50 bg-light text-center">
-                    <h4> <?php if ($n %  2 == 0 ){echo ('Adresse de Facturation');}else{echo ('Adresse de Livraison');} $n++;?></h4>
-                    <h4> <?php echo($addr->Label_Adress ); ?></h4>
+                    <h4> <?php if ($n % 2 == 0) {
+                            echo('Adresse de Facturation');
+                        } else {
+                            echo('Adresse de Livraison');
+                        }
+                        $n++; ?></h4>
+                    <h4> <?php echo($addr->Label_Adress); ?></h4>
                     <hr class="my-4">
 
                     <p>
@@ -110,23 +111,22 @@ if (isset($_GET['commande'])) {
             <?php } ?>
 
         </div>
-
-
         <div class="row">
 
-            <?php for ($i = 0; $i < count($result); $i++) { ?>
+            <?php foreach ($articles as $article) { ?>
                 <div class="wcolMax col-md-12 d-flex flex-inline justify-content-between align-items-center">
-                    <img src="<?php echo $result[$i]->Urlimage; ?> " class="art-img-px" width="45" height="45"
+                    <img src="<?php echo $article->Urlimage; ?> " class="art-img-px" width="45" height="45"
                          alt="...">
-                    <?php echo $result[$i]->Nom; ?>
+                    <?php echo $article->Nom; ?>
                     <p class="p-3 m-3">
-                        <?php $result[$i]->Desc ?>
+                        <?php $article->Desc ?>
                         <span>Qts : 
-                        <?php echo $result[$i]->ligne_cmd_Qts; ?></span>
+                        <?php echo $article->ligne_cmd_Qts; ?></span>
+
                         <span class="bg-primary text-white p-3">
-                            Prix Unitaire :
-                            <?php echo $result[$i]->Prix . "  " . MajDevise("euros") ?>
+                            Prix Unitaire :<?php echo $article->Prix . "  " . MajDevise("euros") ?>
                         </span>
+                        <span class="bg-secondary text-white p-3"><?= $article->Prix * $article->ligne_cmd_Qts . "  " . MajDevise("euros") ?></span>
                     </p>
                 </div>
             <?php } ?>

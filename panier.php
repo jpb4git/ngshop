@@ -14,8 +14,6 @@ if (isset($_SESSION['panier'])){
     $total = totalPanier($db,$_SESSION);
 }
 
-
-
 if (isset($_POST) && !empty($_POST)) {
 
     //-----------------------------------------------------------------------------------------------------------------
@@ -80,8 +78,6 @@ if (isset($_POST) && !empty($_POST)) {
 
     }
 }
-
-
 
 ?>
 <!DOCTYPE html>
@@ -179,7 +175,8 @@ if (isset($_POST) && !empty($_POST)) {
                                 <?= $art->Desc ?>
                                 <input class="width-qts" type="text" name="modifQts<?php echo $art->id_Article ?>" value="<?php echo $_SESSION['panier']['id_' . $k]['qts'] ?>" size="4">
                                 <input class="btn btn-outline-danger" type="submit" name="deleteItem<?php echo $art->id_Article ?>" value="supprimer cet article">
-                                <span class="bg-primary text-white p-3"><?= $art->Prix . "  " . MajDevise("euros") ?></span>
+                                <span class="bg-primary text-white p-3"><?= 'Prix unitaire : '. $art->Prix . "  " . MajDevise("euros") ?></span>
+                                <span class="bg-secondary text-white p-3"><?= $art->Prix * $_SESSION['panier']['id_' . $k]['qts'] . "  " . MajDevise("euros") ?></span>
                             </p>
                         </div>
                         <?php
@@ -189,7 +186,7 @@ if (isset($_POST) && !empty($_POST)) {
             ?>
             <div class="mb-5 p-5 wcolMax col-md-12 d-flex flex-inline justify-content-end align-items-center">
               
-                <div class="w-25 text-right p-3 text-white bg-success rounded">
+                <div class="w-25 text-right p-3 text-white bg-secondary rounded">
                   <?php echo "Total  : " . $total ?>
               </div>
             </div>

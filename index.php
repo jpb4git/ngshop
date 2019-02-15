@@ -19,8 +19,9 @@ session_start();
 <header>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <a class="navbar-brand" href="#">NgShop</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav">
@@ -33,9 +34,7 @@ session_start();
                 <li class="nav-item">
                     <a class="nav-link" href="panier.php">Panier</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="test-db.php">db- test connexion</a>
-                </li>
+
                 <li class="nav-item">
                     <a class="nav-link" href="#"></a>
                 </li>
@@ -64,7 +63,7 @@ session_start();
                     Les Atouts nbShop
                 </h3>
                 <h3 class="text-center mt-1 mb-5">
-                   
+
                 </h3>
             </div>
             <div class="col-sm-12 green-bottom-line">
@@ -102,7 +101,9 @@ session_start();
                 <div class="col-sm-12 green-bottom-line">
                     <div class="row p-5 d-flex justify-content-end">
                         <div class="col-lg-7 p-5 ml-3 d-flex flex-column justify-content-end">
-                            <h2>Les apps ont le pouvoir de changer la façon dont vous faites tout ce qui vous passionne : créer, apprendre, jouer… ou tout simplement être plus productif. ngShop est l’endroit idéal pour découvrir de nouvelles apps qui vous feront vivre vos passions comme jamais.
+                            <h2>Les apps ont le pouvoir de changer la façon dont vous faites tout ce qui vous passionne
+                                : créer, apprendre, jouer… ou tout simplement être plus productif. ngShop est l’endroit
+                                idéal pour découvrir de nouvelles apps qui vous feront vivre vos passions comme jamais.
                             </h2>
                             <a class=" infoBtn btn btn-warning" href="">Lorem </a>
                         </div>
@@ -134,28 +135,28 @@ session_start();
         </div>
 
     </div>
-     <div class="container-fluid green-container">
-     <div class="row trans pt-5">
-     <dic class="col-sm-12"><h2 class="text-center w-100 text-white">Trusted by 66% of the world’s busiest sites</h2></dic>
-     </div>
+    <div class="container-fluid green-container">
         <div class="row trans pt-5">
-                <div class="col-sm-12 col-md-3 d-flex justify-content-center">
-                    <img class="custom" src="assets/custom1.svg" alt="">
-                </div>    
-                <div class="col-sm-12 col-md-3 d-flex justify-content-center">
-                    <img class="custom" src="assets/custom2.svg" alt="">
-                </div> 
-                <div class="col-sm-12 col-md-3 d-flex justify-content-center">
-                    <img class="custom" src="assets/custom3.svg" alt="">
-                </div> 
-                <div class="col-sm-12 col-md-3 d-flex justify-content-center">
-                    <img class="custom" src="assets/custom4.svg" alt="">
-                </div>     
-
-                
-               
+            <dic class="col-sm-12"><h2 class="text-center w-100 text-white">Trusted by 66% of the world’s busiest
+                    sites</h2></dic>
         </div>
-     </div>   
+        <div class="row trans pt-5">
+            <div class="col-sm-12 col-md-3 d-flex justify-content-center">
+                <img class="custom" src="assets/custom1.svg" alt="">
+            </div>
+            <div class="col-sm-12 col-md-3 d-flex justify-content-center">
+                <img class="custom" src="assets/custom2.svg" alt="">
+            </div>
+            <div class="col-sm-12 col-md-3 d-flex justify-content-center">
+                <img class="custom" src="assets/custom3.svg" alt="">
+            </div>
+            <div class="col-sm-12 col-md-3 d-flex justify-content-center">
+                <img class="custom" src="assets/custom4.svg" alt="">
+            </div>
+
+
+        </div>
+    </div>
 </main>
 <footer>
     <div class="container">
@@ -170,11 +171,7 @@ session_start();
 
         </div>
     </div>
-
-
-
 </footer>
-
 
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
         integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous">
