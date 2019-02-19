@@ -7,12 +7,14 @@ include_once 'db-functions/connexion.php';
 include_once 'db-functions/reqs.php';
 
 $db = createConnexion();
-
+/*
 if (isset($_SESSION['panier'])){
     $total = totalPanier($db,$_SESSION['panier']);
 }else{
     $total = totalPanier($db,$_SESSION);
 }
+*/
+
 
 if (isset($_POST) && !empty($_POST)) {
 
@@ -21,19 +23,23 @@ if (isset($_POST) && !empty($_POST)) {
     //-----------------------------------------------------------------------------------------------------------------
     if (isset($_POST['ajout']) && $_POST['ajout'] == "Ajouter au panier") {
 
-        $u = 0;
-        foreach ($_POST as $key => $value) {
-    
-            if (is_numeric($value)) {
-                $u = rtrim($key, "_") ;
-                if (!array_key_exists('id_' . $u, $_SESSION['panier'])) {
-                    $_SESSION['panier']['id_' . $u] = ['qts' => 1];
-                }else{
-                    $_SESSION['panier']['id_' . $u]['qts'] =  intval($_SESSION['panier']['id_' . $u]['qts']) + 1 ;
-                }
-            }
+        foreach ($_POST['article_select'] as  $key => $value) {
+            // le panier existe
+           if ($_SESSION['panier']){
+
+               if (!array_key_exists('id_' . $value , $_SESSION['panier'])) {
+                   echo ' not in';
+                   $_SESSION['panier']['id_' . $value] = ['qts' => 1];
+               }else {
+                   echo 'in';
+                   $_SESSION['panier']['id_' . $value]['qts'] =  intval($_SESSION['panier']['id_' . $value]['qts']) + 1 ;
+               }
+
+           } else{
+               $_SESSION['panier']['id_' . $value] = ['qts' => 1];
+           }
+
         }
-    
     }
     //-----------------------------------------------------------------------------------------------------------------
     // delete dynamique----------------------------------------------------------------------------------------

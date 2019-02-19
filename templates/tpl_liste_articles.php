@@ -25,7 +25,8 @@
                             </div>
                             <div class="col-md-2">
                                 <label>Add </label>
-                                <input type="checkbox" id="<?php echo $article->id_Article;?>" name="<?php echo $article->id_Article; ?> "value="<?php echo $article->id_Article; ?>"><br>
+                                <input type="checkbox"  name="article_select[]" value="<?php echo $article->id_Article; ?>"><br>
+
                             </div>
                         </div>
                     </div>

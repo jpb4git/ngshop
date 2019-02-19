@@ -307,7 +307,7 @@ function getAdressOnCommand($instance, $id_Command)
  */
 function totalPanier($instance, $arr)
 {
-    $k = 0;
+
     $total = 0;
     foreach ($arr as $key => $value) {
         // si l'on est sur un id
