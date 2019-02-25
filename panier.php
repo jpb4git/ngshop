@@ -8,48 +8,72 @@ include_once 'db-functions/reqs.php';
 
 $db = createConnexion();
 
-if (isset($_SESSION['panier'])){
-    $total = totalPanier($db,$_SESSION['panier']);
-}else{
-    $total = totalPanier($db,$_SESSION);
+
+if (isset($_SESSION['panier'])) {
+    $total = totalPanier($db, $_SESSION['panier']);
+} else {
+    $total = totalPanier($db, $_SESSION);
 }
 
 if (isset($_POST) && !empty($_POST)) {
-
     //-----------------------------------------------------------------------------------------------------------------
     // ajout article au panier
     //-----------------------------------------------------------------------------------------------------------------
     if (isset($_POST['ajout']) && $_POST['ajout'] == "Ajouter au panier") {
 
-        $u = 0;
-        foreach ($_POST as $key => $value) {
-    
+        $idArticle = 0;
+        foreach ($_POST as $value) {
+
             if (is_numeric($value)) {
-                $u = rtrim($key, "_") ;
-                if (!array_key_exists('id_' . $u, $_SESSION['panier'])) {
-                    $_SESSION['panier']['id_' . $u] = ['qts' => 1];
-                }else{
-                    $_SESSION['panier']['id_' . $u]['qts'] =  intval($_SESSION['panier']['id_' . $u]['qts']) + 1 ;
+
+                // l'article existe en base
+                if (isExistArticle($db, $value)) {
+
+
+                    $article = getArticle($db, $value);
+                    if (!isset($_SESSION['panier'])) {
+                        // ajout qts à l'article
+                        $_SESSION['panier']['id_' . $idArticle] = ['qts' => 1,
+                            'poids' => $article->Poids
+                        ];
+                        // ajout du poids unitaire
+                        //$_SESSION['panier']['id_' . $idArticle] = ['poids' => $article->Poids];
+                    } else {
+                        if (!array_key_exists('id_' . $idArticle, $_SESSION['panier'])) {
+
+                            $_SESSION['panier']['id_' . $idArticle] = ['qts' => 1,
+                                'poids' => $article->Poids
+                            ];
+                        } else {
+                            $_SESSION['panier']['id_' . $idArticle]['qts'] = intval($_SESSION['panier']['id_' . $idArticle]['qts']) + 1;
+                        }
+                    }
                 }
             }
         }
-    
+        //jdebug($_SESSION);
     }
-    //-----------------------------------------------------------------------------------------------------------------
+
+    //---------------------------------------------------------------------------------------------------------
     // delete dynamique----------------------------------------------------------------------------------------
-    //-----------------------------------------------------------------------------------------------------------------
+    //---------------------------------------------------------------------------------------------------------
 
     foreach ($_POST as $key => $value) {
         if (substr($key, 0, 10) == "deleteItem") {
             // echo "method delete de ouf <br>" . 'id a delete : ' . substr($key, 10) . '<br>';
             unset ($_SESSION['panier']['id_' . substr($key, 10)]);
+
+            //si le panier ne contient plus d'article  on supprime le panier
+            if (count($_SESSION['panier']) <= 0) {
+                unset ($_SESSION['panier']);
+            }
         }
     }
 
     //-----------------------------------------------------------------------------------------------------------------
     // recalcule du prix global
     //-----------------------------------------------------------------------------------------------------------------
-   $total = totalPanier($db,$_SESSION['panier']);
+    $total = totalPanier($db, $_SESSION['panier']);
     if (isset($_POST['recalcule'])) {
         //echo " method recalcule <br>";
         // mise à jour Qts et msgError
@@ -66,7 +90,8 @@ if (isset($_POST) && !empty($_POST)) {
             }
         }
         // recalcule du prix final
-        $total = totalPanier($db,$_SESSION['panier']);
+        $total = totalPanier($db, $_SESSION['panier']);
+
     }
 
     //-----------------------------------------------------------------------------------------------------------------
@@ -78,6 +103,7 @@ if (isset($_POST) && !empty($_POST)) {
 
     }
 }
+
 
 ?>
 <!DOCTYPE html>
@@ -132,75 +158,87 @@ if (isset($_POST) && !empty($_POST)) {
                 <h1 class="badge  w-100 p-3 m-3">Article(s) ajouté(s)</h1>
             </div>
             <div class="w-100 d-flex justify-content-center p-2 m-2">
-            <input class="w-25 btn btn-danger p-1 m-2" type="submit" id="" name="vider" value="vider le panier">  
-                <input class="w-25 btn btn-outline-secondary p-1 m-2" type="submit" id="" name="recalcule" value="recalculer le panier">
+                <input class="w-25 btn btn-danger p-1 m-2" type="submit" id="" name="vider" value="vider le panier">
+                <input class="w-25 btn btn-outline-secondary p-1 m-2" type="submit" id="" name="recalcule"
+                       value="recalculer le panier">
             </div>
             <div class="row">
-            <?php
-            $err = false;
-            if (isset($_SESSION['panier'])){
+                <?php
+                $err = false;
+                if (isset($_SESSION['panier'])){
 
-            foreach ($_SESSION['panier'] as $key => $value) {
+                foreach ($_SESSION['panier'] as $key => $value) {
                 // on recupère  l'id sans le prefixe
                 $k = substr($key, 3);
 
                 // test si la cle n'est pas msgError
                 if (substr($key, 0, 3) == "id_") {
-                     
-                    // l'article existe t'il dans la base
-                    if (isExistArticle($db,$k)) {
-                        $art = getArticle($db,$k);
-                        $err = isset($_SESSION['msgError' . $art->id_Article]);
-                        if (isset($_SESSION['msgError' . $art->id_Article])) {
-                            // on affiche le message d'erreur pour cette Qts
-                            ?>
-                            <span class="w-100 p-3 bg-danger text-white text-center"><?php echo $_SESSION['msgError' . $art->id_Article] ?></span>
-                            <?php
-                            //on supprime le message d'errur apres usage
-                            unset($_SESSION['msgError' . $art->id_Article]);
-                        }
-                        if ($err){   ?>
-                            <div class="wcolMax col-md-12 d-flex flex-inline justify-content-between align-items-center bg-warning">
-                        <?php
-                        }else{
-                        ?>
-                        <div class="wcolMax col-md-12 d-flex flex-inline justify-content-between align-items-center ">
-                        <?php } ?>
-                        <img src="<?php echo $art->Urlimage ; ?> " class="art-img-px" width="45" height="45" alt="...">
-                            <?php echo $art->Nom; ?>
-                            <p class="p-3 m-3">
-                                <?= $art->Desc ?>
-                                <input class="width-qts" type="text" name="modifQts<?php echo $art->id_Article ?>" value="<?php echo $_SESSION['panier']['id_' . $k]['qts'] ?>" size="4">
-                                <input class="btn btn-outline-danger" type="submit" name="deleteItem<?php echo $art->id_Article ?>" value="supprimer cet article">
-                                <span class="bg-primary text-white p-3"><?= 'Prix unitaire : '. $art->Prix . "  " . MajDevise("euros") ?></span>
-                                <span class="bg-secondary text-white p-3"><?= $art->Prix * $_SESSION['panier']['id_' . $k]['qts'] . "  " . MajDevise("euros") ?></span>
-                            </p>
-                        </div>
-                        <?php
-                    }
+
+                // l'article existe t'il dans la base
+                if (isExistArticle($db, $k)) {
+                $art = getArticle($db, $k);
+                $err = isset($_SESSION['msgError' . $art->id_Article]);
+                if (isset($_SESSION['msgError' . $art->id_Article])) {
+                    // on affiche le message d'erreur pour cette Qts
+                    ?>
+                    <span class="w-100 p-3 bg-danger text-white text-center"><?php echo $_SESSION['msgError' . $art->id_Article] ?></span>
+                    <?php
+                    //on supprime le message d'errur apres usage
+                    unset($_SESSION['msgError' . $art->id_Article]);
                 }
-            }
-            ?>
-            <div class="mb-5 p-5 wcolMax col-md-12 d-flex flex-inline justify-content-end align-items-center">
-              
-                <div class="w-25 text-right p-3 text-white bg-secondary rounded">
-                  <?php echo "Total  : " . $total ?>
-              </div>
-            </div>
-           <div class="w-100 d-flex justify-content-center">
-           <a href="validation.php" class="p-2 mb-5 w-75 btn btn-outline-success" type="submit" id="" name="valider-panier" >Valider mon panier</a>
-           </div> 
+                if ($err){ ?>
+                <div class="wcolMax col-md-12 d-flex flex-inline justify-content-between align-items-center bg-warning">
+                    <?php
+                    }else{
+                    ?>
+                    <div class="wcolMax col-md-12 d-flex flex-inline justify-content-between align-items-center ">
+                        <?php } ?>
+                        <img src="<?php echo $art->Urlimage; ?> " class="art-img-px" width="45" height="45" alt="...">
+                        <?php echo $art->Nom; ?>
+                        <p class="p-3 m-3">
+                            <?= $art->Desc ?>
+                            <input class="width-qts" type="text" name="modifQts<?php echo $art->id_Article ?>"
+                                   value="<?php echo $_SESSION['panier']['id_' . $k]['qts'] ?>" size="4">
+                            <input class="btn btn-outline-danger" type="submit"
+                                   name="deleteItem<?php echo $art->id_Article ?>" value="supprimer cet article">
+
+                            <span class="bg-primary text-white p-3"><?= 'Poids unitaire : ' . $art->Poids . "  " . MajDevise("kg") ?></span>
+
+                            <span class="bg-primary text-white p-3"><?= 'Prix unitaire : ' . $art->Prix . "  " . MajDevise("euros") ?></span>
+
+                            <span class="bg-secondary text-white p-3"><?= $art->Prix * $_SESSION['panier']['id_' . $k]['qts'] . "  " . MajDevise("euros") ?></span>
+
+                        </p>
+                    </div>
+                    <?php
+                    }
+                    }
+                    }
+                    ?>
+                    <div class="mb-5 p-5  col-md-12 d-flex flex-column justify-content-end align-items-right ">
+                        <div class="w-100 text-right p-3 text-white ">
+                            <span class="w-100 bg-info text-white p-3"><?php echo "Total  : " . ($total + calculFraisPort($total)) ?> Euros</span>
+                        </div>
+                        <div class="w-100 text-right p-3 text-white ">
+                            <span class="w-100 bg-info text-white p-3"><?php echo labelingFraisDePort(calculFraisPort($total)); ?> </span>
+                        </div>
+                    </div>
+
+                    <div class="w-100 d-flex justify-content-center">
+                        <a href="validation.php" class="p-2 mb-5 w-75 btn btn-outline-success" type="submit" id=""
+                           name="valider-panier">Valider mon panier</a>
+                    </div>
         </form>
         <?php
-        }else{
-             ?>
-              <div class="mb-5 p-5 wcolMax col-md-12 d-flex flex-inline justify-content-center align-items-center">
-              <span><h1>panier vide</h1></span>
-              </div>   
-         <?php   
+        } else {
+            ?>
+            <div class="mb-5 p-5 wcolMax col-md-12 d-flex flex-inline justify-content-center align-items-center">
+                <span><h1>panier vide</h1></span>
+            </div>
+            <?php
         }
         ?>
-</div>
+    </div>
 </main>
 <footer>
 

@@ -39,10 +39,8 @@ if (isset($_POST) && !empty($_POST)) {
         $_POST['lprenom']
     );
 
-
     // creation ligne de commande 
     $idCommandCreated = createCommande($db, $idUserCreated, $id_adr_F, $id_adr_L);
-
     // creation ligne de commande
     if (isset($_SESSION['panier'])) {
         foreach ($_SESSION['panier'] as $key => $value) {
@@ -233,7 +231,7 @@ if (isset($_SESSION['panier'])) {
                                             <?= $art->Desc ?>
                                             <span>Qts : <?php echo $_SESSION['panier']['id_' . $k]['qts'] ?></span>
                                             <span class="bg-primary text-white p-3"> Prix Unitaire : <?= $art->Prix . "  " . MajDevise("euros") ?></span>
-                                            <span class="bg-secondary text-white p-3"><?= $art->Prix * $_SESSION['panier']['id_' . $k]['qts']. "  " . MajDevise("euros") ?></span>
+                                            <span class="bg-secondary text-white p-3"><?= $art->Prix * $_SESSION['panier']['id_' . $k]['qts'] . "  " . MajDevise("euros") ?></span>
                                         </p>
                                     </div>
                                     <?php
@@ -242,11 +240,14 @@ if (isset($_SESSION['panier'])) {
                         }
 
                         ?>
-                        <div
-                                class="mb-5 p-5 wcolMax col-md-12 d-flex flex-inline justify-content-end align-items-center">
-
-                            <div class="w-25 text-right p-3 text-green btn btn-outline-success rounded">
-                                <?php echo "Total  : " . $total ?>
+                        <div class="mb-5 p-5 wcolMax col-md-12 d-flex flex-inline justify-content-end align-items-center">
+                            <div class="mb-5 p-5  col-md-12 d-flex flex-column justify-content-end align-items-right ">
+                                <div class="w-100 text-right p-3 text-white ">
+                                    <span class="w-100 bg-info text-white p-3"><?php echo "Total  : " . ($total + calculFraisPort($total)) ?> Euros</span>
+                                </div>
+                                <div class="w-100 text-right p-3 text-white ">
+                                    <span class="w-100 bg-info text-white p-3"><?php echo labelingFraisDePort(calculFraisPort($total)); ?> </span>
+                                </div>
                             </div>
                         </div>
                         <div class="w-100 d-flex justify-content-center">

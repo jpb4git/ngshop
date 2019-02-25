@@ -8,8 +8,22 @@ $db = createConnexion();
 
 
 if (isset($_GET) && !empty($_GET['id'])) {
-    $art = getArticle($db,$_GET['id']);
+    $art = getArticle($db, $_GET['id']);
+
 }
+
+if (isset($_POST['submit']) && !empty($_POST['submit'])) {
+
+    updateArticlePrix($db,$_POST['id'],$_POST['Prix']);
+    updateArticleStock($db,$_POST['id'],$_POST['Stock'])  ;
+    $art = getArticle($db,$_POST['id']);
+    //var_dump($_POST);
+    //die();
+
+
+
+}
+
 
 ?>
 
@@ -60,40 +74,41 @@ if (isset($_GET) && !empty($_GET['id'])) {
 
 
         <div class="row">
-        <div class="col">
-        <a  href="catalogue2.php" class="btn btn-success m-1 p-3"> Retour au catalogue</a>  
-            <h1 class="p-3 mt-3 mb-3 mr-1 ml-1 badge  w-100"><?= $art->Nom ?></span></h1>
-        </div> 
-        
+            <div class="col">
+                <a href="catalogue2.php" class="btn btn-success m-1 p-3"> Retour au catalogue</a>
+                <h1 class="p-3 mt-3 mb-3 mr-1 ml-1 badge  w-100"><?= $art->Nom ?></span></h1>
+            </div>
+
         </div>
         <div class="row">
-
-            <div class="col-sm-12 ">
-                <div class="card">
-                    <div class="card-header d-flex justify-content-center bg-white">
-
-                        <img src="<?php echo $art->Urlimage; ?>" class="art-img img-fluid w-25 card-img-top" alt="...">
-                    </div>
-                    <div class="card-body">
-                        <h5 class="card-title"><?= $art->Nom ?></h5>
-                        <p class="card-text"><?= $art->Desc ?></p>
-                        <!--<p class="card-text"><?PHP //$art['descFull'] ?></p> -->
-                        <p class="bg-secondary rounded p-3 text-white text-center">
-                            <?= $art->Prix ?> Euros
-                        </p>
-                        <div class="card-footer d-flex justify-content-center bg-white">
-                            <div class="col-sm-12 d-flex justify-content-center">
-                            </div>
+            <form action="updateArticle.php" method="post">
+                <div class="col-sm-12 ">
+                    <div class="card">
+                        <div class="card-header d-flex justify-content-center bg-white">
+                            <img src="<?php echo $art->Urlimage; ?>" class="art-img img-fluid w-25 card-img-top"
+                                 alt="...">
                         </div>
-                        <div class="col-sm-12 d-flex justify-content-center mb-5 rounded">
-                            <div class="row  mb-5 p-3">
-                               <?php include_once "templates/tpl_commentaires.php"  ?>
+                        <div class="card-body">
+                            <h5 class="card-title"><?= $art->Nom ?></h5>
+                            <p class="card-text"><?= $art->Desc ?></p>
+                            <!--<p class="card-text"><?PHP //$art['descFull'] ?></p> -->
+                            <p class="bg-secondary rounded p-3 text-white text-center">
+                                <input type="text" value="<?php echo $art->Prix ?>" name="Prix"> Euros
+                            </p>
+                            <p class="bg-secondary rounded p-3 text-white text-center">
+                                <input type="text" value="<?php echo $art->Stock ?>" name="Stock"> Unités
+                                <input type="hidden" value="<?php echo $art->id_Article ?>" name="id">
+                            </p>
+                            <div class="card-footer d-flex justify-content-center bg-white">
+                                <div class="col-sm-12 d-flex justify-content-center">
+                                </div>
                             </div>
+
                         </div>
                     </div>
                 </div>
-
-            </div>
+                <input type="submit" name="submit" value="Modifier">
+            </form>
         </div>
     </div>
 </main>

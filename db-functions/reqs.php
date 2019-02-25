@@ -168,6 +168,10 @@ function FindUserInTown($instance, $search)
 
 }
 
+/**
+ * @param $instance
+ * @return mixed
+ */
 function totalLastCommand($instance)
 {
     $sql = "
@@ -185,7 +189,10 @@ function totalLastCommand($instance)
 
 }
 
-
+/**
+ * @param $instance
+ * @return mixed
+ */
 function totalPriceTodayCommande($instance)
 {
     $sql = "
@@ -285,8 +292,8 @@ function CommandSumByUser($instance, $id)
 }
 
 /**
- * @param $instance         : instance de la base de données
- * @param $id_Command       : id de la commande
+ * @param $instance : instance de la base de données
+ * @param $id_Command : id de la commande
  * @return mixed
  */
 function getAdressOnCommand($instance, $id_Command)
@@ -318,7 +325,7 @@ function totalPanier($instance, $arr)
             $total += $tempPrice * intval($value['qts']);
         }
     }
-    return $total . " Euros";
+    return $total;
 }
 
 /**
@@ -347,12 +354,13 @@ function getLignePrix($instance, $id)
  */
 function isExistArticle($instance, $id)
 {
+
     $sql = "SELECT id_Article FROM Article WHERE id_Article = ?";
     $stmt = $instance->prepare($sql);
     $stmt->execute([$id]);
     $result = $stmt->fetch();
 
-    return $result > 0;
+    return $result > 0; // renvoie false si pas present
 
 }
 
@@ -443,7 +451,13 @@ function createCommande($instance, $idUserCreated, $id_adr_F, $id_adr_L)
 
 }
 
-
+/**
+ * @param $instance
+ * @param $idArticle
+ * @param $idCommandCreated
+ * @param $qts
+ * @param $Prix
+ */
 function createLigneCommande($instance, $idArticle, $idCommandCreated, $qts, $Prix)
 {
 
@@ -474,4 +488,92 @@ function isNumComExist($instance, $numCom)
 
 }
 
+/**
+ * @param $montant_total
+ * @return float|int
+ */
+function calculFraisPort($montant_total)
+{
+    $poidsTotal = 0;
 
+    foreach ($_SESSION['panier'] as $articlePanier) {
+        $poidsTotal += $articlePanier['poids'] * $articlePanier['qts'];
+    }
+
+    if ($poidsTotal <= 0.500) {
+        $fraisport = 5;
+        //echo 'frais de port : 5 euros';
+    } else if ($poidsTotal > 0.500 && $poidsTotal <= 2) {
+        $fraisport = $montant_total * 0.10;
+        //echo 'frais de port :' . $fraisport . 'euros';
+
+    } else {
+        $fraisport = 0;
+        //echo 'frais de port gratuit';
+    }
+    return $fraisport;
+}
+
+/**
+ * @param $frais
+ * @return string
+ */
+function labelingFraisDePort($frais)
+{
+
+    if ($frais == 0) {
+        return 'frais de port Offerts';
+    } else {
+        return ' dont ' . $frais . ' Euros de frais de port';
+
+    }
+}
+
+/**
+ * @param $instance
+ * @param $id_Article
+ * @param $Prix
+ */
+function updateArticlePrix($instance, $id_Article, $Prix)
+{
+    $sql = "UPDATE Article SET 
+           Prix = :Prix 
+           WHERE id_Article = :id_Article";
+
+    $stmt = $instance->prepare($sql);
+    $stmt->bindParam('Prix', $Prix, PDO::PARAM_STR);
+    $stmt->bindParam('id_Article', $id_Article, PDO::PARAM_INT);
+
+    $stmt->execute();
+
+}
+
+/**
+ * @param $instance
+ * @param $id_Article
+ * @param $stock
+ */
+function updateArticleStock($instance, $id_Article, $stock)
+{
+
+    $sql = "UPDATE Article SET 
+           Stock = :Stock 
+           WHERE id_Article = :id_Article";
+
+    $stmt = $instance->prepare($sql);
+    $stmt->bindParam(':Stock', $stock, PDO::PARAM_STR);
+    $stmt->bindParam(':id_Article', $id_Article, PDO::PARAM_INT);
+
+    $stmt->execute();
+}
+
+/**
+ * @param $instance
+ * @param $id_article
+ */
+function deleteArticle($instance, $id_article)
+{
+    $stmt = $instance->prepare("DELETE FROM Article WHERE id_Article = ?");
+    $stmt->execute([$id_article]);
+
+}
