@@ -56,7 +56,7 @@ $articles = getAllArticles($db);
         <?php include 'header.php'; ?>
     </div>
     <div class="container">
-     <?php  include_once "templates/tpl_liste_articles.php";  ?>
+        <?php include_once "templates/tpl_liste_articles.php"; ?>
     </div>
 </main>
 <footer>

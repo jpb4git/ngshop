@@ -8,7 +8,7 @@ $db = createConnexion();
 
 
 if (isset($_GET) && !empty($_GET['id'])) {
-    $art = getArticle($db,$_GET['id']);
+    $art = getArticle($db, $_GET['id']);
 }
 
 ?>
@@ -60,11 +60,11 @@ if (isset($_GET) && !empty($_GET['id'])) {
 
 
         <div class="row">
-        <div class="col">
-        <a  href="catalogue2.php" class="btn btn-success m-1 p-3"> Retour au catalogue</a>  
-            <h1 class="p-3 mt-3 mb-3 mr-1 ml-1 badge  w-100"><?= $art->Nom ?></span></h1>
-        </div> 
-        
+            <div class="col">
+                <a href="catalogue2.php" class="btn btn-success m-1 p-3"> Retour au catalogue</a>
+                <h1 class="p-3 mt-3 mb-3 mr-1 ml-1 badge  w-100"><?= $art->Nom ?></span></h1>
+            </div>
+
         </div>
         <div class="row">
 
@@ -87,7 +87,7 @@ if (isset($_GET) && !empty($_GET['id'])) {
                         </div>
                         <div class="col-sm-12 d-flex justify-content-center mb-5 rounded">
                             <div class="row  mb-5 p-3">
-                               <?php include_once "templates/tpl_commentaires.php"  ?>
+                                <?php include_once "templates/tpl_commentaires.php" ?>
                             </div>
                         </div>
                     </div>

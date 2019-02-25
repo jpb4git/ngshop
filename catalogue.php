@@ -1,6 +1,6 @@
 <?php
 session_start();
-include_once'class/database.php';
+include_once 'class/database.php';
 include_once 'functions/useful.php';
 include_once 'db-functions/connexion.php';
 include_once 'db-functions/reqs.php';
@@ -57,8 +57,7 @@ $articles = getAllArticles($db);
     </div>
     <div class="container">
 
-            <?php include_once "templates/tpl_articles.php"  ?>
-    
+        <?php include_once "templates/tpl_articles.php" ?>
 
 
     </div>
