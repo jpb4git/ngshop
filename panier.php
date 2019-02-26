@@ -23,11 +23,11 @@ if (isset($_POST) && !empty($_POST)) {
 
         //$idArticle = 0;
         foreach ($_POST as $value) {
-            jdebug('numeric: ' . is_numeric($value));
+
             if (is_numeric($value)) {
 
                 // l'article existe en base
-                jdebug('isExist :' . isExistArticle($db, $value));
+              
                 if (isExistArticle($db, $value)) {
 
 
