@@ -14,34 +14,35 @@ if (isset($_SESSION['panier'])) {
 } else {
     $total = totalPanier($db, $_SESSION);
 }
-
+jdebug($_POST);
 if (isset($_POST) && !empty($_POST)) {
     //-----------------------------------------------------------------------------------------------------------------
     // ajout article au panier
     //-----------------------------------------------------------------------------------------------------------------
     if (isset($_POST['ajout']) && $_POST['ajout'] == "Ajouter au panier") {
 
-        $idArticle = 0;
+        //$idArticle = 0;
         foreach ($_POST as $value) {
-
+            jdebug('numeric: ' . is_numeric($value));
             if (is_numeric($value)) {
 
                 // l'article existe en base
+                jdebug('isExist :' . isExistArticle($db, $value));
                 if (isExistArticle($db, $value)) {
 
 
                     $article = getArticle($db, $value);
                     if (!isset($_SESSION['panier'])) {
                         // ajout qts à l'article
-                        $_SESSION['panier']['id_' . $idArticle] = ['qts' => 1,
+                        $_SESSION['panier']['id_' . $article->id_Article] = ['qts' => 1,
                             'poids' => $article->Poids
                         ];
                         // ajout du poids unitaire
                         //$_SESSION['panier']['id_' . $idArticle] = ['poids' => $article->Poids];
                     } else {
-                        if (!array_key_exists('id_' . $idArticle, $_SESSION['panier'])) {
+                        if (!array_key_exists('id_' . $article->id_Article, $_SESSION['panier'])) {
 
-                            $_SESSION['panier']['id_' . $idArticle] = ['qts' => 1,
+                            $_SESSION['panier']['id_' . $article->id_Article] = ['qts' => 1,
                                 'poids' => $article->Poids
                             ];
                         } else {
@@ -51,7 +52,7 @@ if (isset($_POST) && !empty($_POST)) {
                 }
             }
         }
-        //jdebug($_SESSION);
+        jdebug($_SESSION);
     }
 
     //---------------------------------------------------------------------------------------------------------
